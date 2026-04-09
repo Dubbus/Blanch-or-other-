@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Deep Winter",
+    "undertone": "cool",
+    "category": "winter",
+    "description": "Rich, deep, and cool. Think jewel tones — deep burgundy, emerald, navy. Skin has a blue or pink undertone with high contrast between hair, skin, and eyes.",
+    "hex_palette": ["#4B0082", "#800020", "#003366", "#2F4F4F", "#8B0000", "#191970", "#301934", "#004040"]
+  },
+  {
+    "name": "True Winter",
+    "undertone": "cool",
+    "category": "winter",
+    "description": "The coolest and most contrasted season. Icy brights and true primary colors — royal blue, true red, hot pink. Clear and vivid tones with no warmth.",
+    "hex_palette": ["#0000FF", "#FF0000", "#FF1493", "#00BFFF", "#FFFFFF", "#000000", "#8A2BE2", "#00CED1"]
+  },
+  {
+    "name": "Bright Winter",
+    "undertone": "cool",
+    "category": "winter",
+    "description": "High contrast with a touch of warmth. Bright, clear, saturated colors — fuchsia, electric blue, bright coral. The brightest of the winter seasons.",
+    "hex_palette": ["#FF00FF", "#1E90FF", "#FF6347", "#00FF7F", "#FFD700", "#FF1493", "#00BFFF", "#FF4500"]
+  },
+  {
+    "name": "Light Spring",
+    "undertone": "warm",
+    "category": "spring",
+    "description": "Warm, light, and fresh. Soft warm pastels — peach, light coral, warm ivory. Delicate coloring with low contrast and golden undertones.",
+    "hex_palette": ["#FFDAB9", "#FFB6C1", "#F0E68C", "#98FB98", "#87CEEB", "#FFA07A", "#FFFACD", "#DDA0DD"]
+  },
+  {
+    "name": "True Spring",
+    "undertone": "warm",
+    "category": "spring",
+    "description": "Warm, clear, and medium contrast. Fresh warm brights — coral, turquoise, warm green. Think of spring flowers in full bloom.",
+    "hex_palette": ["#FF7F50", "#40E0D0", "#FF6347", "#32CD32", "#FFD700", "#FF69B4", "#00CED1", "#FFA500"]
+  },
+  {
+    "name": "Bright Spring",
+    "undertone": "warm",
+    "category": "spring",
+    "description": "The clearest and most vivid spring. High contrast with warm undertones — bright coral, electric green, vivid aqua. Bold and eye-catching.",
+    "hex_palette": ["#FF4500", "#00FF00", "#00CED1", "#FF1493", "#FFD700", "#FF6347", "#1E90FF", "#FF69B4"]
+  },
+  {
+    "name": "Light Summer",
+    "undertone": "cool",
+    "category": "summer",
+    "description": "Cool, light, and muted. Soft dusty pastels — lavender, powder blue, dusty rose. Low contrast with a gentle, muted quality.",
+    "hex_palette": ["#E6E6FA", "#B0C4DE", "#D8BFD8", "#C0C0C0", "#778899", "#BC8F8F", "#AFEEEE", "#DDA0DD"]
+  },
+  {
+    "name": "True Summer",
+    "undertone": "cool",
+    "category": "summer",
+    "description": "The most muted and cool season. Soft, dusty, and grayed colors — mauve, slate blue, sage. Everything has a blue-gray undertone.",
+    "hex_palette": ["#708090", "#9370DB", "#6B8E23", "#CD853F", "#BC8F8F", "#8FBC8F", "#B0C4DE", "#DEB887"]
+  },
+  {
+    "name": "Soft Summer",
+    "undertone": "cool",
+    "category": "summer",
+    "description": "Cool and muted with a touch of warmth. Dusty and softened colors — dusty teal, muted berry, soft olive. The most neutral of the summers.",
+    "hex_palette": ["#5F9EA0", "#8B7D6B", "#9ACD32", "#CD8C95", "#8B8682", "#6B8E23", "#B0C4DE", "#D2B48C"]
+  },
+  {
+    "name": "Soft Autumn",
+    "undertone": "warm",
+    "category": "autumn",
+    "description": "Warm and muted with a touch of coolness. Softened earth tones — dusty peach, muted olive, warm taupe. The gentlest autumn.",
+    "hex_palette": ["#D2B48C", "#8B7D6B", "#9ACD32", "#CD853F", "#BC8F8F", "#808000", "#BDB76B", "#A0522D"]
+  },
+  {
+    "name": "True Autumn",
+    "undertone": "warm",
+    "category": "autumn",
+    "description": "The warmest and most golden season. Rich earth tones — burnt orange, olive, warm brown. Think of autumn leaves at their peak.",
+    "hex_palette": ["#D2691E", "#8B4513", "#556B2F", "#B8860B", "#CD853F", "#A0522D", "#6B8E23", "#DAA520"]
+  },
+  {
+    "name": "Deep Autumn",
+    "undertone": "warm",
+    "category": "autumn",
+    "description": "Deep, warm, and rich. Dark warm tones — chocolate brown, olive green, burnt sienna. High contrast with warm undertones throughout.",
+    "hex_palette": ["#8B4513", "#2F4F4F", "#800000", "#556B2F", "#8B0000", "#4B3621", "#654321", "#704214"]
+  }
+]

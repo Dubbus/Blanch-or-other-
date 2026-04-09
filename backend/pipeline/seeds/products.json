@@ -1,0 +1,512 @@
+[
+  {
+    "brand": "MAC",
+    "name": "Lip Pencil",
+    "category": "liner",
+    "shade_name": "Spice",
+    "hex_code": "#8B5742",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/lip-pencil-P380710?skuId=1517371"
+  },
+  {
+    "brand": "MAC",
+    "name": "Lip Pencil",
+    "category": "liner",
+    "shade_name": "Whirl",
+    "hex_code": "#8B6355",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/lip-pencil-P380710?skuId=1517389"
+  },
+  {
+    "brand": "MAC",
+    "name": "Lip Pencil",
+    "category": "liner",
+    "shade_name": "Soar",
+    "hex_code": "#B5756A",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/lip-pencil-P380710?skuId=1517397"
+  },
+  {
+    "brand": "MAC",
+    "name": "Lip Pencil",
+    "category": "liner",
+    "shade_name": "Boldly Bare",
+    "hex_code": "#A67B6B",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/lip-pencil-P380710?skuId=2454578"
+  },
+  {
+    "brand": "MAC",
+    "name": "Lip Pencil",
+    "category": "liner",
+    "shade_name": "Cherry",
+    "hex_code": "#8B1A1A",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/lip-pencil-P380710?skuId=1517355"
+  },
+  {
+    "brand": "MAC",
+    "name": "Matte Lipstick",
+    "category": "lipstick",
+    "shade_name": "Velvet Teddy",
+    "hex_code": "#A0522D",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/lipstick-P380712?skuId=2434570"
+  },
+  {
+    "brand": "MAC",
+    "name": "Matte Lipstick",
+    "category": "lipstick",
+    "shade_name": "Ruby Woo",
+    "hex_code": "#CC0000",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/lipstick-P380712?skuId=2434562"
+  },
+  {
+    "brand": "MAC",
+    "name": "Matte Lipstick",
+    "category": "lipstick",
+    "shade_name": "Mehr",
+    "hex_code": "#B5726A",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/lipstick-P380712?skuId=2434588"
+  },
+  {
+    "brand": "Fenty Beauty",
+    "name": "Gloss Bomb Universal Lip Luminizer",
+    "category": "gloss",
+    "shade_name": "Fenty Glow",
+    "hex_code": "#E8B89D",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/gloss-bomb-universal-lip-luminizer-P67988612"
+  },
+  {
+    "brand": "Fenty Beauty",
+    "name": "Gloss Bomb Universal Lip Luminizer",
+    "category": "gloss",
+    "shade_name": "Fu$$y",
+    "hex_code": "#D4847C",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/gloss-bomb-universal-lip-luminizer-P67988612"
+  },
+  {
+    "brand": "Fenty Beauty",
+    "name": "Gloss Bomb Universal Lip Luminizer",
+    "category": "gloss",
+    "shade_name": "Hot Chocolit",
+    "hex_code": "#7B3F2E",
+    "retailer": "sephora",
+    "price_cents": 2200,
+    "product_url": "https://www.sephora.com/product/gloss-bomb-universal-lip-luminizer-P67988612"
+  },
+  {
+    "brand": "Charlotte Tilbury",
+    "name": "Pillow Talk Lip Liner",
+    "category": "liner",
+    "shade_name": "Pillow Talk",
+    "hex_code": "#B27B78",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/lip-cheat-lip-liner-P433205"
+  },
+  {
+    "brand": "Charlotte Tilbury",
+    "name": "Pillow Talk Lip Liner",
+    "category": "liner",
+    "shade_name": "Pillow Talk Medium",
+    "hex_code": "#9E5B5B",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/lip-cheat-lip-liner-P433205"
+  },
+  {
+    "brand": "Charlotte Tilbury",
+    "name": "Matte Revolution Lipstick",
+    "category": "lipstick",
+    "shade_name": "Pillow Talk",
+    "hex_code": "#C2847A",
+    "retailer": "sephora",
+    "price_cents": 3500,
+    "product_url": "https://www.sephora.com/product/matte-revolution-luminous-lipstick-P433206"
+  },
+  {
+    "brand": "Charlotte Tilbury",
+    "name": "Matte Revolution Lipstick",
+    "category": "lipstick",
+    "shade_name": "Walk of No Shame",
+    "hex_code": "#C41E3A",
+    "retailer": "sephora",
+    "price_cents": 3500,
+    "product_url": "https://www.sephora.com/product/matte-revolution-luminous-lipstick-P433206"
+  },
+  {
+    "brand": "Rare Beauty",
+    "name": "Soft Pinch Liquid Blush",
+    "category": "blush",
+    "shade_name": "Joy",
+    "hex_code": "#DB7093",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/rare-beauty-soft-pinch-liquid-blush-P97989536"
+  },
+  {
+    "brand": "Rare Beauty",
+    "name": "Soft Pinch Liquid Blush",
+    "category": "blush",
+    "shade_name": "Bliss",
+    "hex_code": "#FFB6C1",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/rare-beauty-soft-pinch-liquid-blush-P97989536"
+  },
+  {
+    "brand": "Rare Beauty",
+    "name": "Soft Pinch Liquid Blush",
+    "category": "blush",
+    "shade_name": "Grateful",
+    "hex_code": "#C96E6E",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/rare-beauty-soft-pinch-liquid-blush-P97989536"
+  },
+  {
+    "brand": "Rare Beauty",
+    "name": "Soft Pinch Liquid Blush",
+    "category": "blush",
+    "shade_name": "Hope",
+    "hex_code": "#E8967A",
+    "retailer": "sephora",
+    "price_cents": 2300,
+    "product_url": "https://www.sephora.com/product/rare-beauty-soft-pinch-liquid-blush-P97989536"
+  },
+  {
+    "brand": "NYX",
+    "name": "Lip Liner",
+    "category": "liner",
+    "shade_name": "Mauve",
+    "hex_code": "#996666",
+    "retailer": "ulta",
+    "price_cents": 500,
+    "product_url": "https://www.ulta.com/p/slim-lip-pencil-xlsImpprod2150065"
+  },
+  {
+    "brand": "NYX",
+    "name": "Lip Liner",
+    "category": "liner",
+    "shade_name": "Natural",
+    "hex_code": "#B08B7A",
+    "retailer": "ulta",
+    "price_cents": 500,
+    "product_url": "https://www.ulta.com/p/slim-lip-pencil-xlsImpprod2150065"
+  },
+  {
+    "brand": "NYX",
+    "name": "Lip Liner",
+    "category": "liner",
+    "shade_name": "Peekaboo Neutral",
+    "hex_code": "#C4967A",
+    "retailer": "ulta",
+    "price_cents": 500,
+    "product_url": "https://www.ulta.com/p/slim-lip-pencil-xlsImpprod2150065"
+  },
+  {
+    "brand": "NYX",
+    "name": "Butter Gloss",
+    "category": "gloss",
+    "shade_name": "Tiramisu",
+    "hex_code": "#A67B6B",
+    "retailer": "ulta",
+    "price_cents": 600,
+    "product_url": "https://www.ulta.com/p/butter-gloss-xlsImpprod6380145"
+  },
+  {
+    "brand": "NYX",
+    "name": "Butter Gloss",
+    "category": "gloss",
+    "shade_name": "Praline",
+    "hex_code": "#8B6E5D",
+    "retailer": "ulta",
+    "price_cents": 600,
+    "product_url": "https://www.ulta.com/p/butter-gloss-xlsImpprod6380145"
+  },
+  {
+    "brand": "NYX",
+    "name": "Butter Gloss",
+    "category": "gloss",
+    "shade_name": "Angel Food Cake",
+    "hex_code": "#FFB6C1",
+    "retailer": "ulta",
+    "price_cents": 600,
+    "product_url": "https://www.ulta.com/p/butter-gloss-xlsImpprod6380145"
+  },
+  {
+    "brand": "Maybelline",
+    "name": "SuperStay Matte Ink",
+    "category": "lipstick",
+    "shade_name": "Lover",
+    "hex_code": "#D4847C",
+    "retailer": "ulta",
+    "price_cents": 1100,
+    "product_url": "https://www.ulta.com/p/superstay-matte-ink-liquid-lipstick-xlsImpprod17721145"
+  },
+  {
+    "brand": "Maybelline",
+    "name": "SuperStay Matte Ink",
+    "category": "lipstick",
+    "shade_name": "Seductress",
+    "hex_code": "#C41E3A",
+    "retailer": "ulta",
+    "price_cents": 1100,
+    "product_url": "https://www.ulta.com/p/superstay-matte-ink-liquid-lipstick-xlsImpprod17721145"
+  },
+  {
+    "brand": "Maybelline",
+    "name": "SuperStay Matte Ink",
+    "category": "lipstick",
+    "shade_name": "Amazonian",
+    "hex_code": "#A0522D",
+    "retailer": "ulta",
+    "price_cents": 1100,
+    "product_url": "https://www.ulta.com/p/superstay-matte-ink-liquid-lipstick-xlsImpprod17721145"
+  },
+  {
+    "brand": "Milani",
+    "name": "Color Statement Liner",
+    "category": "liner",
+    "shade_name": "All Natural",
+    "hex_code": "#C4967A",
+    "retailer": "ulta",
+    "price_cents": 500,
+    "product_url": "https://www.ulta.com/p/color-statement-lipliner-xlsImpprod5050019"
+  },
+  {
+    "brand": "Milani",
+    "name": "Color Statement Liner",
+    "category": "liner",
+    "shade_name": "Bordeaux",
+    "hex_code": "#6D2C2C",
+    "retailer": "ulta",
+    "price_cents": 500,
+    "product_url": "https://www.ulta.com/p/color-statement-lipliner-xlsImpprod5050019"
+  },
+  {
+    "brand": "Clinique",
+    "name": "Almost Lipstick",
+    "category": "lipstick",
+    "shade_name": "Black Honey",
+    "hex_code": "#5C3A3A",
+    "retailer": "sephora",
+    "price_cents": 2800,
+    "product_url": "https://www.sephora.com/product/almost-lipstick-P122751"
+  },
+  {
+    "brand": "NARS",
+    "name": "Velvet Matte Lip Pencil",
+    "category": "lipstick",
+    "shade_name": "Dolce Vita",
+    "hex_code": "#B07070",
+    "retailer": "sephora",
+    "price_cents": 3000,
+    "product_url": "https://www.sephora.com/product/velvet-matte-lip-pencil-P80203"
+  },
+  {
+    "brand": "NARS",
+    "name": "Velvet Matte Lip Pencil",
+    "category": "lipstick",
+    "shade_name": "Cruella",
+    "hex_code": "#B00000",
+    "retailer": "sephora",
+    "price_cents": 3000,
+    "product_url": "https://www.sephora.com/product/velvet-matte-lip-pencil-P80203"
+  },
+  {
+    "brand": "NARS",
+    "name": "Blush",
+    "category": "blush",
+    "shade_name": "Orgasm",
+    "hex_code": "#E88B7A",
+    "retailer": "sephora",
+    "price_cents": 3600,
+    "product_url": "https://www.sephora.com/product/blush-P2855"
+  },
+  {
+    "brand": "Tower 28",
+    "name": "ShineOn Lip Jelly",
+    "category": "gloss",
+    "shade_name": "Pistachio",
+    "hex_code": "#E8B89D",
+    "retailer": "sephora",
+    "price_cents": 1500,
+    "product_url": "https://www.sephora.com/product/tower-28-beauty-shineon-lip-jelly-P460295"
+  },
+  {
+    "brand": "Tower 28",
+    "name": "ShineOn Lip Jelly",
+    "category": "gloss",
+    "shade_name": "Cashew",
+    "hex_code": "#C4967A",
+    "retailer": "sephora",
+    "price_cents": 1500,
+    "product_url": "https://www.sephora.com/product/tower-28-beauty-shineon-lip-jelly-P460295"
+  },
+  {
+    "brand": "Benefit",
+    "name": "Benetint",
+    "category": "tint",
+    "shade_name": "Rose-Tinted Lip & Cheek Stain",
+    "hex_code": "#C45B5B",
+    "retailer": "sephora",
+    "price_cents": 2600,
+    "product_url": "https://www.sephora.com/product/benetint-P1272"
+  },
+  {
+    "brand": "e.l.f.",
+    "name": "Lip Liner",
+    "category": "liner",
+    "shade_name": "Natural",
+    "hex_code": "#B08B7A",
+    "retailer": "ulta",
+    "price_cents": 200,
+    "product_url": "https://www.ulta.com/p/no-budge-retractable-lip-liner-pimprod2030068"
+  },
+  {
+    "brand": "e.l.f.",
+    "name": "Lip Liner",
+    "category": "liner",
+    "shade_name": "Deep Brown",
+    "hex_code": "#5C3A2E",
+    "retailer": "ulta",
+    "price_cents": 200,
+    "product_url": "https://www.ulta.com/p/no-budge-retractable-lip-liner-pimprod2030068"
+  },
+  {
+    "brand": "L'Oreal",
+    "name": "Colour Riche Lip Liner",
+    "category": "liner",
+    "shade_name": "Eternal Mauve",
+    "hex_code": "#9B6B6B",
+    "retailer": "ulta",
+    "price_cents": 1000,
+    "product_url": "https://www.ulta.com/p/colour-riche-lip-liner-xlsImpprod10791737"
+  },
+  {
+    "brand": "Patrick Ta",
+    "name": "Major Headlines Double-Take Lip Liner",
+    "category": "liner",
+    "shade_name": "Not Just A Phase",
+    "hex_code": "#8B6355",
+    "retailer": "sephora",
+    "price_cents": 2400,
+    "product_url": "https://www.sephora.com/product/patrick-ta-major-headlines-double-take-lip-liner-P501440"
+  },
+  {
+    "brand": "Patrick Ta",
+    "name": "Major Headlines Double-Take Lip Liner",
+    "category": "liner",
+    "shade_name": "She's Confident",
+    "hex_code": "#A0522D",
+    "retailer": "sephora",
+    "price_cents": 2400,
+    "product_url": "https://www.sephora.com/product/patrick-ta-major-headlines-double-take-lip-liner-P501440"
+  },
+  {
+    "brand": "Revlon",
+    "name": "Super Lustrous Lipstick",
+    "category": "lipstick",
+    "shade_name": "Toast of New York",
+    "hex_code": "#B35C44",
+    "retailer": "ulta",
+    "price_cents": 900,
+    "product_url": "https://www.ulta.com/p/super-lustrous-lipstick-xlsImpprod1790033"
+  },
+  {
+    "brand": "Revlon",
+    "name": "Super Lustrous Lipstick",
+    "category": "lipstick",
+    "shade_name": "Rum Raisin",
+    "hex_code": "#7B3F3F",
+    "retailer": "ulta",
+    "price_cents": 900,
+    "product_url": "https://www.ulta.com/p/super-lustrous-lipstick-xlsImpprod1790033"
+  },
+  {
+    "brand": "Too Faced",
+    "name": "Lip Injection Maximum Plump",
+    "category": "gloss",
+    "shade_name": "Cotton Candy Kisses",
+    "hex_code": "#FFB6D9",
+    "retailer": "sephora",
+    "price_cents": 2900,
+    "product_url": "https://www.sephora.com/product/lip-injection-maximum-plump-P445785"
+  },
+  {
+    "brand": "Dior",
+    "name": "Dior Addict Lip Glow",
+    "category": "tint",
+    "shade_name": "001 Pink",
+    "hex_code": "#E8A0B0",
+    "retailer": "sephora",
+    "price_cents": 4000,
+    "product_url": "https://www.sephora.com/product/dior-addict-lip-glow-P236816"
+  },
+  {
+    "brand": "Dior",
+    "name": "Dior Addict Lip Glow",
+    "category": "tint",
+    "shade_name": "004 Coral",
+    "hex_code": "#E88070",
+    "retailer": "sephora",
+    "price_cents": 4000,
+    "product_url": "https://www.sephora.com/product/dior-addict-lip-glow-P236816"
+  },
+  {
+    "brand": "Maybelline",
+    "name": "Fit Me Blush",
+    "category": "blush",
+    "shade_name": "Mauve",
+    "hex_code": "#C08080",
+    "retailer": "ulta",
+    "price_cents": 700,
+    "product_url": "https://www.ulta.com/p/fit-me-blush-xlsImpprod13381025"
+  },
+  {
+    "brand": "Milani",
+    "name": "Baked Blush",
+    "category": "blush",
+    "shade_name": "Luminoso",
+    "hex_code": "#E89878",
+    "retailer": "ulta",
+    "price_cents": 900,
+    "product_url": "https://www.ulta.com/p/baked-blush-xlsImpprod1790043"
+  },
+  {
+    "brand": "Fenty Beauty",
+    "name": "Stunna Lip Paint",
+    "category": "lipstick",
+    "shade_name": "Uncensored",
+    "hex_code": "#B00000",
+    "retailer": "sephora",
+    "price_cents": 2700,
+    "product_url": "https://www.sephora.com/product/stunna-lip-paint-P39787544"
+  },
+  {
+    "brand": "Fenty Beauty",
+    "name": "Stunna Lip Paint",
+    "category": "lipstick",
+    "shade_name": "Unattached",
+    "hex_code": "#A06050",
+    "retailer": "sephora",
+    "price_cents": 2700,
+    "product_url": "https://www.sephora.com/product/stunna-lip-paint-P39787544"
+  }
+]

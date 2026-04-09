@@ -1,0 +1,110 @@
+[
+  {
+    "handle": "@sydneychambers",
+    "platform": "instagram",
+    "display_name": "Sydney Chambers",
+    "follower_count": 150000,
+    "primary_season": "Deep Winter",
+    "bio": "Color analysis expert. Cool-toned queen. Helping you find your perfect shade.",
+    "matched_seasons": ["Deep Winter", "True Winter", "Bright Winter"]
+  },
+  {
+    "handle": "@kaylajayofficial",
+    "platform": "instagram",
+    "display_name": "Kayla Jay",
+    "follower_count": 320000,
+    "primary_season": "True Autumn",
+    "bio": "Warm-toned beauty lover. Lip combo enthusiast.",
+    "matched_seasons": ["True Autumn", "Deep Autumn", "Soft Autumn"]
+  },
+  {
+    "handle": "@mikayla.nogueira",
+    "platform": "tiktok",
+    "display_name": "Mikayla Nogueira",
+    "follower_count": 15800000,
+    "primary_season": "True Winter",
+    "bio": "Beauty creator from Massachusetts.",
+    "matched_seasons": ["True Winter", "Deep Winter"]
+  },
+  {
+    "handle": "@alixearle",
+    "platform": "tiktok",
+    "display_name": "Alix Earle",
+    "follower_count": 7200000,
+    "primary_season": "Light Spring",
+    "bio": "Get ready with me.",
+    "matched_seasons": ["Light Spring", "True Spring"]
+  },
+  {
+    "handle": "@makeupbymario",
+    "platform": "instagram",
+    "display_name": "Mario Dedivanovic",
+    "follower_count": 11200000,
+    "primary_season": "Deep Autumn",
+    "bio": "Makeup artist. Creator of Makeup by Mario.",
+    "matched_seasons": ["Deep Autumn", "True Autumn", "Deep Winter"]
+  },
+  {
+    "handle": "@patrickta",
+    "platform": "instagram",
+    "display_name": "Patrick Ta",
+    "follower_count": 3500000,
+    "primary_season": "True Winter",
+    "bio": "Celebrity makeup artist and beauty brand founder.",
+    "matched_seasons": ["True Winter", "Bright Winter"]
+  },
+  {
+    "handle": "@rfrancisbeauty",
+    "platform": "instagram",
+    "display_name": "Robert Francis",
+    "follower_count": 450000,
+    "primary_season": "Soft Summer",
+    "bio": "Soft glam specialist. Muted tones enthusiast.",
+    "matched_seasons": ["Soft Summer", "Soft Autumn", "Light Summer"]
+  },
+  {
+    "handle": "@glamzilla",
+    "platform": "tiktok",
+    "display_name": "Glamzilla",
+    "follower_count": 6000000,
+    "primary_season": "Bright Spring",
+    "bio": "Beauty dupes and drugstore finds.",
+    "matched_seasons": ["Bright Spring", "True Spring", "Bright Winter"]
+  },
+  {
+    "handle": "@rosiemakeup",
+    "platform": "instagram",
+    "display_name": "Rosie",
+    "follower_count": 280000,
+    "primary_season": "Light Summer",
+    "bio": "Soft, cool-toned makeup looks for everyday.",
+    "matched_seasons": ["Light Summer", "True Summer", "Soft Summer"]
+  },
+  {
+    "handle": "@stateofkait",
+    "platform": "tiktok",
+    "display_name": "Kait",
+    "follower_count": 520000,
+    "primary_season": "True Spring",
+    "bio": "Warm girl makeup. Golden hour energy.",
+    "matched_seasons": ["True Spring", "Light Spring", "Bright Spring"]
+  },
+  {
+    "handle": "@nicolconcilio",
+    "platform": "tiktok",
+    "display_name": "Nicol Concilio",
+    "follower_count": 4100000,
+    "primary_season": "Deep Winter",
+    "bio": "Beauty and lifestyle.",
+    "matched_seasons": ["Deep Winter", "True Winter"]
+  },
+  {
+    "handle": "@tarfreckles",
+    "platform": "instagram",
+    "display_name": "Tara",
+    "follower_count": 190000,
+    "primary_season": "Soft Autumn",
+    "bio": "Muted warm tones. Soft autumn lip combos daily.",
+    "matched_seasons": ["Soft Autumn", "True Autumn", "Soft Summer"]
+  }
+]

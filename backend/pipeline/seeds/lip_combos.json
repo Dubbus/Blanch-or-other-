@@ -1,0 +1,554 @@
+[
+  {
+    "influencer_handle": "@sydneychambers",
+    "name": "Sydney's Everyday Nude",
+    "items": [
+      {
+        "shade_name": "Whirl",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Velvet Teddy",
+        "brand": "MAC",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fenty Glow",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@sydneychambers",
+    "name": "Sydney's Bold Red",
+    "items": [
+      {
+        "shade_name": "Cherry",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Ruby Woo",
+        "brand": "MAC",
+        "role": "lipstick",
+        "category": "lipstick"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@sydneychambers",
+    "name": "Sydney's Cool Mauve",
+    "items": [
+      {
+        "shade_name": "Soar",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Mehr",
+        "brand": "MAC",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fu$$y",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@kaylajayofficial",
+    "name": "Kayla's Warm Nude",
+    "items": [
+      {
+        "shade_name": "Spice",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Velvet Teddy",
+        "brand": "MAC",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Hot Chocolit",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@kaylajayofficial",
+    "name": "Kayla's Date Night",
+    "items": [
+      {
+        "shade_name": "She's Confident",
+        "brand": "Patrick Ta",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Amazonian",
+        "brand": "Maybelline",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fenty Glow",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@kaylajayofficial",
+    "name": "Kayla's Everyday Brown",
+    "items": [
+      {
+        "shade_name": "Boldly Bare",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Toast of New York",
+        "brand": "Revlon",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Tiramisu",
+        "brand": "NYX",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@alixearle",
+    "name": "Alix's Clean Girl Lip",
+    "items": [
+      {
+        "shade_name": "Pillow Talk",
+        "brand": "Charlotte Tilbury",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Pillow Talk",
+        "brand": "Charlotte Tilbury",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fenty Glow",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@alixearle",
+    "name": "Alix's Soft Pink",
+    "items": [
+      {
+        "shade_name": "Natural",
+        "brand": "NYX",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Lover",
+        "brand": "Maybelline",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Angel Food Cake",
+        "brand": "NYX",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@mikayla.nogueira",
+    "name": "Mikayla's Power Red",
+    "items": [
+      {
+        "shade_name": "Cherry",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Uncensored",
+        "brand": "Fenty Beauty",
+        "role": "lipstick",
+        "category": "lipstick"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@mikayla.nogueira",
+    "name": "Mikayla's MLBB",
+    "items": [
+      {
+        "shade_name": "Pillow Talk Medium",
+        "brand": "Charlotte Tilbury",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Dolce Vita",
+        "brand": "NARS",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fu$$y",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@glamzilla",
+    "name": "Glamzilla's Drugstore Dupe",
+    "items": [
+      {
+        "shade_name": "Natural",
+        "brand": "e.l.f.",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Lover",
+        "brand": "Maybelline",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Tiramisu",
+        "brand": "NYX",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@glamzilla",
+    "name": "Glamzilla's Bold Coral",
+    "items": [
+      {
+        "shade_name": "Peekaboo Neutral",
+        "brand": "NYX",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Seductress",
+        "brand": "Maybelline",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fenty Glow",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@patrickta",
+    "name": "Patrick's Sculpted Lip",
+    "items": [
+      {
+        "shade_name": "Not Just A Phase",
+        "brand": "Patrick Ta",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Pillow Talk",
+        "brand": "Charlotte Tilbury",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fenty Glow",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@patrickta",
+    "name": "Patrick's Deep Berry",
+    "items": [
+      {
+        "shade_name": "She's Confident",
+        "brand": "Patrick Ta",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Walk of No Shame",
+        "brand": "Charlotte Tilbury",
+        "role": "lipstick",
+        "category": "lipstick"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@rosiemakeup",
+    "name": "Rosie's Soft Summer Lip",
+    "items": [
+      {
+        "shade_name": "Mauve",
+        "brand": "NYX",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Dolce Vita",
+        "brand": "NARS",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Angel Food Cake",
+        "brand": "NYX",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@tarfreckles",
+    "name": "Tara's Muted Peach",
+    "items": [
+      {
+        "shade_name": "All Natural",
+        "brand": "Milani",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Unattached",
+        "brand": "Fenty Beauty",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Praline",
+        "brand": "NYX",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@tarfreckles",
+    "name": "Tara's Everyday Soft Autumn",
+    "items": [
+      {
+        "shade_name": "Spice",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Black Honey",
+        "brand": "Clinique",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Cashew",
+        "brand": "Tower 28",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@stateofkait",
+    "name": "Kait's Golden Hour",
+    "items": [
+      {
+        "shade_name": "Boldly Bare",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Velvet Teddy",
+        "brand": "MAC",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Pistachio",
+        "brand": "Tower 28",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@stateofkait",
+    "name": "Kait's Spring Coral",
+    "items": [
+      {
+        "shade_name": "Peekaboo Neutral",
+        "brand": "NYX",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Toast of New York",
+        "brand": "Revlon",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fenty Glow",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@rfrancisbeauty",
+    "name": "Robert's Soft Glam Lip",
+    "items": [
+      {
+        "shade_name": "Soar",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Mehr",
+        "brand": "MAC",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Angel Food Cake",
+        "brand": "NYX",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@makeupbymario",
+    "name": "Mario's Red Carpet",
+    "items": [
+      {
+        "shade_name": "Cherry",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Ruby Woo",
+        "brand": "MAC",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Fenty Glow",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@makeupbymario",
+    "name": "Mario's Warm Nude",
+    "items": [
+      {
+        "shade_name": "Spice",
+        "brand": "MAC",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Pillow Talk",
+        "brand": "Charlotte Tilbury",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Hot Chocolit",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@nicolconcilio",
+    "name": "Nicol's Dark Glam",
+    "items": [
+      {
+        "shade_name": "Bordeaux",
+        "brand": "Milani",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Rum Raisin",
+        "brand": "Revlon",
+        "role": "lipstick",
+        "category": "lipstick"
+      },
+      {
+        "shade_name": "Hot Chocolit",
+        "brand": "Fenty Beauty",
+        "role": "gloss",
+        "category": "gloss"
+      }
+    ]
+  },
+  {
+    "influencer_handle": "@nicolconcilio",
+    "name": "Nicol's Cool Berry",
+    "items": [
+      {
+        "shade_name": "Eternal Mauve",
+        "brand": "L'Oreal",
+        "role": "liner",
+        "category": "liner"
+      },
+      {
+        "shade_name": "Cruella",
+        "brand": "NARS",
+        "role": "lipstick",
+        "category": "lipstick"
+      }
+    ]
+  }
+]

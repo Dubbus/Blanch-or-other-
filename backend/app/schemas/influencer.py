@@ -14,6 +14,8 @@ class InfluencerOut(CamelModel):
     follower_count: int | None = None
     primary_season_id: str | None = None
     bio: str | None = None
+    instagram_url: str | None = None
+    tiktok_url: str | None = None
 
     @field_validator("id", "primary_season_id", mode="before")
     @classmethod

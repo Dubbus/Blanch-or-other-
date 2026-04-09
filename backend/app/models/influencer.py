@@ -23,6 +23,8 @@ class Influencer(Base):
         UUID(as_uuid=True), ForeignKey("color_seasons.id")
     )
     bio: Mapped[str | None] = mapped_column(Text)
+    instagram_url: Mapped[str | None] = mapped_column(Text)
+    tiktok_url: Mapped[str | None] = mapped_column(Text)
     scraped_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), default=lambda: datetime.now(timezone.utc)

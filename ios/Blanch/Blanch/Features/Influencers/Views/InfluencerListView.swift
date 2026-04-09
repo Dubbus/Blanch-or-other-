@@ -29,10 +29,16 @@ struct InfluencerListView: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(viewModel.influencers) { influencer in
-                                InfluencerCard(influencer: influencer)
+                                NavigationLink(value: influencer) {
+                                    InfluencerCard(influencer: influencer)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                         .padding()
+                    }
+                    .navigationDestination(for: InfluencerDTO.self) { influencer in
+                        InfluencerDetailView(influencer: influencer)
                     }
                 }
             }

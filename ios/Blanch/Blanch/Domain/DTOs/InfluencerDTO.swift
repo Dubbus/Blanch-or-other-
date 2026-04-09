@@ -9,6 +9,8 @@ struct InfluencerDTO: Codable, Identifiable, Hashable {
     let followerCount: Int?
     let primarySeasonId: String?
     let bio: String?
+    let instagramUrl: String?
+    let tiktokUrl: String?
 
     var formattedFollowers: String {
         guard let count = followerCount else { return "" }

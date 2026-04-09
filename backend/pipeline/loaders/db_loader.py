@@ -156,6 +156,8 @@ async def load_influencers(
             existing.display_name = inf_data.get("display_name")
             existing.follower_count = inf_data.get("follower_count")
             existing.bio = inf_data.get("bio")
+            existing.instagram_url = inf_data.get("instagram_url")
+            existing.tiktok_url = inf_data.get("tiktok_url")
             existing.primary_season_id = primary_season_id
             handle_to_id[existing.handle] = existing.id
         else:
@@ -165,6 +167,8 @@ async def load_influencers(
                 display_name=inf_data.get("display_name"),
                 follower_count=inf_data.get("follower_count"),
                 bio=inf_data.get("bio"),
+                instagram_url=inf_data.get("instagram_url"),
+                tiktok_url=inf_data.get("tiktok_url"),
                 primary_season_id=primary_season_id,
             )
             db.add(influencer)

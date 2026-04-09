@@ -3,7 +3,7 @@ import Foundation
 // MARK: - Influencer Repository
 // OOP Pattern: Repository (concrete implementation)
 
-final class InfluencerRepository: InfluencerRepositoryProtocol {
+final class InfluencerRepository: InfluencerRepositoryProtocol, Sendable {
     private let networkClient: NetworkClientProtocol
     private let baseURL: String
 

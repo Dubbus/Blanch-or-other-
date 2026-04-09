@@ -14,7 +14,7 @@ import Foundation
 //
 // New strategies can be added without modifying existing code (Open/Closed Principle).
 
-protocol RecommendationStrategy: AnyObject {
+protocol RecommendationStrategy: AnyObject, Sendable {
     var name: String { get }
     func getRecommendations(limit: Int) async throws -> [ProductDTO]
 }

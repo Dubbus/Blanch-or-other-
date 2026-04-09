@@ -6,7 +6,7 @@ import Foundation
 // It owns a URLSession and handles JSON decoding, error mapping, and auth headers.
 // In tests, we swap this out for a MockNetworkClient that returns canned responses.
 
-final class NetworkClient: NetworkClientProtocol {
+final class NetworkClient: NetworkClientProtocol, @unchecked Sendable {
     private let baseURL: String
     private let session: URLSession
     private let decoder: JSONDecoder

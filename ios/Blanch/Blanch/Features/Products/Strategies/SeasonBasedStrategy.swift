@@ -8,7 +8,7 @@ import Foundation
 // The ViewModel doesn't know which strategy it's using — it just calls
 // strategy.getRecommendations().
 
-final class SeasonBasedStrategy: RecommendationStrategy {
+final class SeasonBasedStrategy: RecommendationStrategy, Sendable {
     let name = "For Your Season"
 
     private let seasonId: String

@@ -6,7 +6,7 @@ import Foundation
 // Any class conforming to this can be swapped in — real client, mock client, cached client.
 // This is how we enable unit testing without hitting the real API.
 
-protocol NetworkClientProtocol: AnyObject {
+protocol NetworkClientProtocol: AnyObject, Sendable {
     func request<T: Decodable>(_ request: URLRequest) async throws -> T
 }
 

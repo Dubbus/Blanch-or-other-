@@ -7,7 +7,7 @@ import Foundation
 // Talks to the Blanch API via NetworkClient + RequestBuilder.
 // The ViewModel only sees the protocol — it doesn't know this class exists.
 
-final class ProductRepository: ProductRepositoryProtocol {
+final class ProductRepository: ProductRepositoryProtocol, Sendable {
     private let networkClient: NetworkClientProtocol
     private let baseURL: String
 

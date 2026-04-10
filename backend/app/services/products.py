@@ -7,10 +7,18 @@ from sqlalchemy.orm import selectinload
 from app.models.product import Product, ProductSeasonMap
 
 
+async def get_brands(db: AsyncSession) -> list[str]:
+    result = await db.execute(
+        select(Product.brand).distinct().order_by(Product.brand)
+    )
+    return list(result.scalars().all())
+
+
 async def get_products(
     db: AsyncSession,
     *,
     category: str | None = None,
+    brand: str | None = None,
     retailer: str | None = None,
     season_id: str | None = None,
     search: str | None = None,
@@ -23,6 +31,9 @@ async def get_products(
     if category:
         query = query.where(Product.category == category)
         count_query = count_query.where(Product.category == category)
+    if brand:
+        query = query.where(Product.brand == brand)
+        count_query = count_query.where(Product.brand == brand)
     if retailer:
         query = query.where(Product.retailer == retailer)
         count_query = count_query.where(Product.retailer == retailer)
@@ -60,6 +71,22 @@ async def get_product_by_id(db: AsyncSession, product_id: str) -> Product | None
         .where(Product.id == uuid.UUID(product_id))
     )
     return result.scalar_one_or_none()
+
+
+async def get_sibling_shades(
+    db: AsyncSession,
+    product_id: str,
+) -> list[Product]:
+    """Get all shades of the same product (same brand + name, different shade)."""
+    product = await get_product_by_id(db, product_id)
+    if not product:
+        return []
+    result = await db.execute(
+        select(Product)
+        .where(Product.brand == product.brand, Product.name == product.name)
+        .order_by(Product.shade_name)
+    )
+    return result.scalars().all()
 
 
 async def get_products_by_season(

@@ -56,7 +56,8 @@ final class AppCoordinator: ObservableObject {
 
     private func productListView() -> some View {
         ProductListView(
-            viewModel: self.viewModelFactory.makeProductListViewModel()
+            viewModel: self.viewModelFactory.makeProductListViewModel(),
+            viewModelFactory: self.viewModelFactory
         )
     }
 }

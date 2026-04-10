@@ -20,6 +20,7 @@
 		39539A8CC1ACE63F771C6A32 /* SeasonBasedStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5AFA1CEF55C7C1519EFF1D /* SeasonBasedStrategy.swift */; };
 		620634CDA558B7960C38079B /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECD46EED48BC27EFF183440 /* NetworkClient.swift */; };
 		74B17BB504CCD56481872977 /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AD5C5AC578E3768C6EA46B /* Endpoints.swift */; };
+		7785BF86E44ADC2BCBC9D700 /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB7FFE4A5CBD3EF2D048076 /* ProductDetailView.swift */; };
 		7A21C43E47321522F8D9182C /* LipComboDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30D815B53E422D377E09709 /* LipComboDTO.swift */; };
 		8773BDD2B49BA49B6DA0B978 /* ProductDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2DE7A50C4E00288B80EF08 /* ProductDetailViewModel.swift */; };
 		8AAA48E40FE0BCFDB179FFA6 /* ProductRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B077A31A19F939043FEE6A96 /* ProductRepository.swift */; };
@@ -46,6 +47,7 @@
 		6B524529A2220663EDE18A04 /* ProductListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListViewModel.swift; sourceTree = "<group>"; };
 		6DDDACCB39CB2DDF7E3B4FE7 /* NetworkClientProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClientProtocol.swift; sourceTree = "<group>"; };
 		702A2A5EDFF127D7F3BE57A3 /* SeasonDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonDTO.swift; sourceTree = "<group>"; };
+		7DB7FFE4A5CBD3EF2D048076 /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
 		9B2DE7A50C4E00288B80EF08 /* ProductDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewModel.swift; sourceTree = "<group>"; };
 		9DC951451B739012477D640A /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		A9A665FFC1383DEA5584C049 /* Blanch.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Blanch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +108,7 @@
 		5979F6FA6962FA0E2F310031 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7DB7FFE4A5CBD3EF2D048076 /* ProductDetailView.swift */,
 				B204751619C8754F4D20647C /* ProductListView.swift */,
 			);
 			path = Views;
@@ -234,32 +237,32 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		"TEMP_4BDCF9CE-985E-4234-922C-DAFD7D8E3E4C" /* Subscription */ = {
+		"TEMP_72CB75FC-68B8-4B11-994F-6762A17E483B" /* Combos */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Combos;
+			sourceTree = "<group>";
+		};
+		"TEMP_CB2E0AB4-6467-4AAB-ADFE-D3124A743C71" /* Subscription */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Subscription;
 			sourceTree = "<group>";
 		};
-		"TEMP_58E5258D-EEB5-4861-905E-CA896A9C1AD2" /* Analysis */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Analysis;
-			sourceTree = "<group>";
-		};
-		"TEMP_9A517DF7-B68C-44F6-ADA9-A77B020DD9F5" /* Profile */ = {
+		"TEMP_CCF508C8-17FF-493D-90C8-DE401B1FDE00" /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		"TEMP_A89B7931-F347-4660-9C38-AE439FFC3642" /* Combos */ = {
+		"TEMP_E84A58EE-7906-450C-B9F5-373B5303BA0F" /* Analysis */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Combos;
+			path = Analysis;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -335,6 +338,7 @@
 				620634CDA558B7960C38079B /* NetworkClient.swift in Sources */,
 				A9370B5544921E398FC28384 /* NetworkClientProtocol.swift in Sources */,
 				04BF8521FDA84FEE4A9DC053 /* ProductDTO.swift in Sources */,
+				7785BF86E44ADC2BCBC9D700 /* ProductDetailView.swift in Sources */,
 				8773BDD2B49BA49B6DA0B978 /* ProductDetailViewModel.swift in Sources */,
 				F21F8A21FFE19D7EF624F03A /* ProductListView.swift in Sources */,
 				320D52CB73E34534709FE89C /* ProductListViewModel.swift in Sources */,

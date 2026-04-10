@@ -22,6 +22,7 @@ final class SeasonBasedStrategy: RecommendationStrategy, Sendable {
     func getRecommendations(limit: Int = 20) async throws -> [ProductDTO] {
         let response = try await repository.getProducts(
             category: nil,
+            brand: nil,
             retailer: nil,
             seasonId: seasonId,
             limit: limit,

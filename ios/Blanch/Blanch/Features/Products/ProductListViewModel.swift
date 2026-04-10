@@ -2,35 +2,33 @@ import Foundation
 
 // MARK: - Product List ViewModel
 // OOP Patterns: Inheritance (extends BaseViewModel) + Strategy (optional recommendation strategy)
-//
-// Inherits from BaseViewModel:
-// - Gets isLoading, errorMessage, hasLoaded for free
-// - Overrides fetchData() (Template Method) with product-specific logic
-//
-// Optionally uses a RecommendationStrategy:
-// - If a strategy is injected, uses it to get personalized recommendations
-// - If no strategy, fetches all products with optional filters
 
 @MainActor
 final class ProductListViewModel: BaseViewModel {
     @Published var products: [ProductDTO] = []
+    @Published var recommendedProducts: [ProductDTO] = []
     @Published var total: Int = 0
     @Published var searchQuery: String = ""
     @Published var selectedCategory: String?
+    @Published var selectedBrand: String?
+    @Published var brands: [String] = []
+    @Published var userSeasonId: String?
 
     private let repository: ProductRepositoryProtocol
     private let strategy: RecommendationStrategy?
 
-    // Dependency injection via init — the ViewModel doesn't create its own dependencies
     init(repository: ProductRepositoryProtocol, strategy: RecommendationStrategy? = nil) {
         self.repository = repository
         self.strategy = strategy
     }
 
-    // Template Method: this is the "blank" that BaseViewModel.loadData() calls
     override func fetchData() async throws {
+        // Load brands on first fetch
+        if brands.isEmpty {
+            brands = try await repository.getBrands()
+        }
+
         if let strategy {
-            // Strategy pattern: delegate to the injected strategy
             products = try await strategy.getRecommendations(limit: 50)
             total = products.count
         } else if !searchQuery.isEmpty {
@@ -40,6 +38,7 @@ final class ProductListViewModel: BaseViewModel {
         } else {
             let response = try await repository.getProducts(
                 category: selectedCategory,
+                brand: selectedBrand,
                 retailer: nil,
                 seasonId: nil,
                 limit: 50,
@@ -47,6 +46,19 @@ final class ProductListViewModel: BaseViewModel {
             )
             products = response.products
             total = response.total
+
+            // Load recommended products if user has a season
+            if let seasonId = userSeasonId {
+                let recResponse = try await repository.getProducts(
+                    category: selectedCategory,
+                    brand: selectedBrand,
+                    retailer: nil,
+                    seasonId: seasonId,
+                    limit: 10,
+                    offset: 0
+                )
+                recommendedProducts = recResponse.products
+            }
         }
     }
 
@@ -56,6 +68,11 @@ final class ProductListViewModel: BaseViewModel {
 
     func filterByCategory(_ category: String?) async {
         selectedCategory = category
+        await loadData()
+    }
+
+    func filterByBrand(_ brand: String?) async {
+        selectedBrand = brand
         await loadData()
     }
 }

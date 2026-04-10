@@ -18,8 +18,10 @@ enum Endpoints {
 
     // Products
     static let products = "/products"
+    static let productBrands = "/products/brands"
     static let productSearch = "/products/search"
     static func product(_ id: String) -> String { "/products/\(id)" }
+    static func productShades(_ id: String) -> String { "/products/\(id)/shades" }
 
     // Influencers
     static let influencers = "/influencers"

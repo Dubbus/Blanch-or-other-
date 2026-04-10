@@ -13,9 +13,11 @@ import Foundation
 // 3. Swapping data sources (e.g., API v1 → v2) transparently
 
 protocol ProductRepositoryProtocol: AnyObject, Sendable {
-    func getProducts(category: String?, retailer: String?, seasonId: String?, limit: Int, offset: Int) async throws -> ProductListResponse
+    func getProducts(category: String?, brand: String?, retailer: String?, seasonId: String?, limit: Int, offset: Int) async throws -> ProductListResponse
     func searchProducts(query: String, limit: Int, offset: Int) async throws -> ProductListResponse
     func getProduct(id: String) async throws -> ProductWithSeasons
+    func getSiblingShades(productId: String) async throws -> [ProductDTO]
+    func getBrands() async throws -> [String]
 }
 
 protocol InfluencerRepositoryProtocol: AnyObject, Sendable {

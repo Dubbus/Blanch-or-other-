@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProductListView: View {
     @StateObject var viewModel: ProductListViewModel
+    let viewModelFactory: ViewModelFactory
 
     private let categories = ["All", "lipstick", "liner", "gloss", "blush", "tint"]
 
@@ -55,10 +56,24 @@ struct ProductListView: View {
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.vertical, 12)
+                    .padding(.top, 12)
                 }
 
-                // Product list
+                // Brand pills
+                if !viewModel.brands.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            brandPill(label: "All Brands", brand: nil)
+                            ForEach(viewModel.brands, id: \.self) { brand in
+                                brandPill(label: brand, brand: brand)
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                    }
+                }
+
+                // Content
                 if viewModel.isLoading && viewModel.products.isEmpty {
                     Spacer()
                     ProgressView()
@@ -82,24 +97,137 @@ struct ProductListView: View {
                     Spacer()
                 } else {
                     ScrollView {
-                        LazyVGrid(columns: [
-                            GridItem(.flexible(), spacing: 16),
-                            GridItem(.flexible(), spacing: 16),
-                        ], spacing: 16) {
-                            ForEach(viewModel.products) { product in
-                                ProductCard(product: product)
+                        VStack(alignment: .leading, spacing: 20) {
+                            // Recommended section
+                            if viewModel.userSeasonId != nil && !viewModel.recommendedProducts.isEmpty {
+                                recommendedSection
+                            } else if viewModel.userSeasonId == nil && viewModel.searchQuery.isEmpty {
+                                analyzePromptBanner
                             }
+
+                            // All products section
+                            allProductsSection
                         }
-                        .padding()
+                        .padding(.top, 4)
                     }
                 }
             }
             .navigationTitle("Discover")
+            .navigationDestination(for: ProductDTO.self) { product in
+                ProductDetailView(
+                    viewModel: viewModelFactory.makeProductDetailViewModel(productId: product.id)
+                )
+            }
             .task {
                 if !viewModel.hasLoaded {
                     await viewModel.loadData()
                 }
             }
+        }
+    }
+
+    // MARK: - Brand Pill
+
+    private func brandPill(label: String, brand: String?) -> some View {
+        let isSelected = viewModel.selectedBrand == brand
+        return Button {
+            Task { await viewModel.filterByBrand(brand) }
+        } label: {
+            Text(label)
+                .font(.caption.weight(.medium))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(isSelected ? Color.warmTerra : Color.warmIvory)
+                .foregroundStyle(isSelected ? .white : .secondary)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .strokeBorder(Color.warmTerra.opacity(isSelected ? 0 : 0.3), lineWidth: 1)
+                )
+        }
+    }
+
+    // MARK: - Analyze Prompt Banner
+
+    private var analyzePromptBanner: some View {
+        HStack(spacing: 14) {
+            Image(systemName: "camera.viewfinder")
+                .font(.title2)
+                .foregroundStyle(Color.warmRose)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Find your perfect shades")
+                    .font(.subheadline.weight(.semibold))
+                Text("Take a color analysis to see which products match you")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+        .padding(14)
+        .background(Color.warmIvory)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(.horizontal)
+    }
+
+    // MARK: - Recommended Section
+
+    private var recommendedSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Recommended for You")
+                    .font(.title3.weight(.bold))
+                Spacer()
+            }
+            .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 14) {
+                    ForEach(viewModel.recommendedProducts) { product in
+                        NavigationLink(value: product) {
+                            ProductCard(product: product, showMatchBadge: true)
+                                .frame(width: 160)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+
+    // MARK: - All Products Section
+
+    private var allProductsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text(viewModel.userSeasonId != nil ? "All Products" : "Browse")
+                    .font(.title3.weight(.bold))
+                Spacer()
+                Text("\(viewModel.total) items")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal)
+
+            LazyVGrid(columns: [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+            ], spacing: 16) {
+                ForEach(viewModel.products) { product in
+                    NavigationLink(value: product) {
+                        ProductCard(product: product, showMatchBadge: false)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom)
         }
     }
 }
@@ -108,17 +236,35 @@ struct ProductListView: View {
 
 struct ProductCard: View {
     let product: ProductDTO
+    var showMatchBadge: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Color swatch
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(hex: product.hexCode ?? "#CCCCCC"))
-                .frame(height: 100)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(.black.opacity(0.08), lineWidth: 1)
-                )
+            ZStack(alignment: .topTrailing) {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(hex: product.hexCode ?? "#CCCCCC"))
+                    .frame(height: 100)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(.black.opacity(0.08), lineWidth: 1)
+                    )
+
+                if showMatchBadge {
+                    HStack(spacing: 3) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.caption2)
+                        Text("Match")
+                            .font(.caption2.weight(.semibold))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.warmBrown.opacity(0.85))
+                    .clipShape(Capsule())
+                    .padding(8)
+                }
+            }
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(product.brand)

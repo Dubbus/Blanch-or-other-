@@ -18,6 +18,7 @@ final class ProductRepository: ProductRepositoryProtocol, Sendable {
 
     func getProducts(
         category: String? = nil,
+        brand: String? = nil,
         retailer: String? = nil,
         seasonId: String? = nil,
         limit: Int = 50,
@@ -26,10 +27,27 @@ final class ProductRepository: ProductRepositoryProtocol, Sendable {
         let request = try RequestBuilder(baseURL: baseURL)
             .setPath(Endpoints.products)
             .addQuery("category", category)
+            .addQuery("brand", brand)
             .addQuery("retailer", retailer)
             .addQuery("season_id", seasonId)
             .addQuery("limit", String(limit))
             .addQuery("offset", String(offset))
+            .build()
+
+        return try await networkClient.request(request)
+    }
+
+    func getSiblingShades(productId: String) async throws -> [ProductDTO] {
+        let request = try RequestBuilder(baseURL: baseURL)
+            .setPath(Endpoints.productShades(productId))
+            .build()
+
+        return try await networkClient.request(request)
+    }
+
+    func getBrands() async throws -> [String] {
+        let request = try RequestBuilder(baseURL: baseURL)
+            .setPath(Endpoints.productBrands)
             .build()
 
         return try await networkClient.request(request)

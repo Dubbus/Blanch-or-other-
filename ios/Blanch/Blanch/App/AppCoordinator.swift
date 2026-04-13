@@ -45,7 +45,9 @@ final class AppCoordinator: ObservableObject {
                 )
             }
             Tab("Analyze", systemImage: "camera.fill") {
-                AnalysisPlaceholderView()
+                AnalysisView(
+                    viewModel: self.viewModelFactory.makeAnalysisViewModel()
+                )
             }
             Tab("Profile", systemImage: "person.crop.circle") {
                 ProfilePlaceholderView()
@@ -63,21 +65,6 @@ final class AppCoordinator: ObservableObject {
 }
 
 // MARK: - Placeholder Views (temporary)
-
-struct AnalysisPlaceholderView: View {
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "camera.viewfinder")
-                .font(.system(size: 60))
-                .foregroundStyle(.secondary)
-            Text("Color Analysis")
-                .font(.title2.weight(.semibold))
-            Text("Take a selfie to discover your color season")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
-    }
-}
 
 struct ProfilePlaceholderView: View {
     var body: some View {

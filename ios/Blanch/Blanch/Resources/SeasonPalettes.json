@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Deep Winter",
+    "category": "winter",
+    "undertone": "cool",
+    "hexPalette": ["#4B0082", "#800020", "#003366", "#2F4F4F", "#8B0000", "#191970", "#301934", "#004040"]
+  },
+  {
+    "name": "True Winter",
+    "category": "winter",
+    "undertone": "cool",
+    "hexPalette": ["#0000FF", "#FF0000", "#FF1493", "#00BFFF", "#FFFFFF", "#000000", "#8A2BE2", "#00CED1"]
+  },
+  {
+    "name": "Bright Winter",
+    "category": "winter",
+    "undertone": "cool",
+    "hexPalette": ["#FF00FF", "#1E90FF", "#FF6347", "#00FF7F", "#FFD700", "#FF1493", "#00BFFF", "#FF4500"]
+  },
+  {
+    "name": "Light Spring",
+    "category": "spring",
+    "undertone": "warm",
+    "hexPalette": ["#FFDAB9", "#FFB6C1", "#F0E68C", "#98FB98", "#87CEEB", "#FFA07A", "#FFFACD", "#DDA0DD"]
+  },
+  {
+    "name": "True Spring",
+    "category": "spring",
+    "undertone": "warm",
+    "hexPalette": ["#FF7F50", "#40E0D0", "#FF6347", "#32CD32", "#FFD700", "#FF69B4", "#00CED1", "#FFA500"]
+  },
+  {
+    "name": "Bright Spring",
+    "category": "spring",
+    "undertone": "warm",
+    "hexPalette": ["#FF4500", "#00FF00", "#00CED1", "#FF1493", "#FFD700", "#FF6347", "#1E90FF", "#FF69B4"]
+  },
+  {
+    "name": "Light Summer",
+    "category": "summer",
+    "undertone": "cool",
+    "hexPalette": ["#E6E6FA", "#B0C4DE", "#D8BFD8", "#C0C0C0", "#778899", "#BC8F8F", "#AFEEEE", "#DDA0DD"]
+  },
+  {
+    "name": "True Summer",
+    "category": "summer",
+    "undertone": "cool",
+    "hexPalette": ["#708090", "#9370DB", "#6B8E23", "#CD853F", "#BC8F8F", "#8FBC8F", "#B0C4DE", "#DEB887"]
+  },
+  {
+    "name": "Soft Summer",
+    "category": "summer",
+    "undertone": "cool",
+    "hexPalette": ["#5F9EA0", "#8B7D6B", "#9ACD32", "#CD8C95", "#8B8682", "#6B8E23", "#B0C4DE", "#D2B48C"]
+  },
+  {
+    "name": "Soft Autumn",
+    "category": "autumn",
+    "undertone": "warm",
+    "hexPalette": ["#D2B48C", "#8B7D6B", "#9ACD32", "#CD853F", "#BC8F8F", "#808000", "#BDB76B", "#A0522D"]
+  },
+  {
+    "name": "True Autumn",
+    "category": "autumn",
+    "undertone": "warm",
+    "hexPalette": ["#D2691E", "#8B4513", "#556B2F", "#B8860B", "#CD853F", "#A0522D", "#6B8E23", "#DAA520"]
+  },
+  {
+    "name": "Deep Autumn",
+    "category": "autumn",
+    "undertone": "warm",
+    "hexPalette": ["#8B4513", "#2F4F4F", "#800000", "#556B2F", "#8B0000", "#4B3621", "#654321", "#704214"]
+  }
+]

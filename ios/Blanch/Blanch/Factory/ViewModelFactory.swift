@@ -28,6 +28,14 @@ final class ViewModelFactory {
         InfluencerRepository(networkClient: networkClient, baseURL: baseURL)
     }()
 
+    private lazy var analysisRepository: AnalysisRepository = {
+        AnalysisRepository(networkClient: networkClient, baseURL: baseURL, authManager: authManager)
+    }()
+
+    private lazy var analysisPipeline: AnalysisPipeline = {
+        AnalysisPipeline()
+    }()
+
     private let baseURL: String
 
     init(networkClient: NetworkClientProtocol, authManager: AuthManager, baseURL: String = "http://localhost:8001/api/v1") {
@@ -50,6 +58,12 @@ final class ViewModelFactory {
 
     func makeInfluencerListViewModel() -> InfluencerListViewModel {
         InfluencerListViewModel(repository: influencerRepository)
+    }
+
+    // MARK: - Analysis ViewModels
+
+    func makeAnalysisViewModel() -> AnalysisViewModel {
+        AnalysisViewModel(pipeline: analysisPipeline, repository: analysisRepository)
     }
 
     // MARK: - Strategy-based ViewModels

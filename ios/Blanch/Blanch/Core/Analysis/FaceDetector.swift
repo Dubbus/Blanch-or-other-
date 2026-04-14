@@ -8,7 +8,7 @@ import CoreImage
 // in image-pixel coordinates (origin top-left), ready for the skin sampler.
 
 protocol FaceDetecting: Sendable {
-    func detectFace(in image: CIImage, pixelSize: CGSize) async throws -> DetectedFace
+    func detectFace(in cgImage: CGImage, pixelSize: CGSize) async throws -> DetectedFace
 }
 
 struct DetectedFace: Sendable {
@@ -39,7 +39,7 @@ enum FaceDetectionError: Error, LocalizedError {
 }
 
 final class FaceDetector: FaceDetecting, Sendable {
-    func detectFace(in image: CIImage, pixelSize: CGSize) async throws -> DetectedFace {
+    func detectFace(in cgImage: CGImage, pixelSize: CGSize) async throws -> DetectedFace {
         // VNImageRequestHandler.perform is synchronous — the completion handler
         // fires during the perform call. If we resume the continuation from
         // inside the completion handler AND from the perform's catch block,
@@ -48,7 +48,12 @@ final class FaceDetector: FaceDetecting, Sendable {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<DetectedFace, Error>) in
             var captured: Result<DetectedFace, Error>?
 
-            let request = VNDetectFaceLandmarksRequest { request, error in
+            // We use VNDetectFaceRectanglesRequest (not Landmarks) because the
+            // Landmarks request fails on the iOS Simulator with "could not create
+            // inference context" — it relies on Neural Engine compute that the sim
+            // doesn't provide. Our skin sampler only needs the face bounding box,
+            // which rectangles gives us reliably.
+            let request = VNDetectFaceRectanglesRequest { request, error in
                 if let error {
                     captured = .failure(FaceDetectionError.visionError(error))
                     return
@@ -66,18 +71,19 @@ final class FaceDetector: FaceDetecting, Sendable {
 
                 let face = observations[0]
                 let boundingBox = Self.pixelRect(from: face.boundingBox, imageSize: pixelSize)
-                let contour = face.landmarks?.faceContour.map { region in
-                    Self.pixelPoints(from: region.normalizedPoints, faceBox: face.boundingBox, imageSize: pixelSize)
-                }
 
                 captured = .success(DetectedFace(
                     boundingBox: boundingBox,
-                    faceContour: contour,
+                    faceContour: nil,
                     confidence: face.confidence
                 ))
             }
 
-            let handler = VNImageRequestHandler(ciImage: image, orientation: .up, options: [:])
+            // Pin to revision 1 — newer revisions use Neural Engine models that
+            // fail on the iOS Simulator with "could not create inference context".
+            request.revision = VNDetectFaceRectanglesRequestRevision1
+
+            let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
             do {
                 try handler.perform([request])
             } catch {
@@ -102,16 +108,4 @@ final class FaceDetector: FaceDetecting, Sendable {
         return CGRect(x: x, y: y, width: width, height: height)
     }
 
-    // Landmark points are normalized to the face bounding box, origin bottom-left.
-    // Map them to absolute image pixel coordinates with origin top-left.
-    private static func pixelPoints(from normalized: [CGPoint], faceBox: CGRect, imageSize: CGSize) -> [CGPoint] {
-        normalized.map { p in
-            let faceX = faceBox.origin.x + p.x * faceBox.size.width
-            let faceY = faceBox.origin.y + p.y * faceBox.size.height
-            return CGPoint(
-                x: faceX * imageSize.width,
-                y: (1.0 - faceY) * imageSize.height
-            )
-        }
-    }
 }

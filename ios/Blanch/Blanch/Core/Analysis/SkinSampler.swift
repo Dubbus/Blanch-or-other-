@@ -125,11 +125,14 @@ final class SkinSampler: SkinSampling, Sendable {
             return rect.intersection(CGRect(origin: .zero, size: imageSize))
         }
 
+        // Jawline is intentionally omitted — it picks up beard stubble, shadow,
+        // and neck contour on most people, pulling the average L* down.
+        // Cheeks are widened and pulled further from the nose shadow; forehead
+        // is moved lower to avoid hairline clipping.
         return [
-            NamedRect(name: "forehead",  rect: subRect(xFraction: 0.35, yFraction: 0.12, wFraction: 0.30, hFraction: 0.10)),
-            NamedRect(name: "leftCheek", rect: subRect(xFraction: 0.15, yFraction: 0.55, wFraction: 0.18, hFraction: 0.12)),
-            NamedRect(name: "rightCheek", rect: subRect(xFraction: 0.67, yFraction: 0.55, wFraction: 0.18, hFraction: 0.12)),
-            NamedRect(name: "jawline",   rect: subRect(xFraction: 0.40, yFraction: 0.85, wFraction: 0.20, hFraction: 0.08)),
+            NamedRect(name: "forehead",  rect: subRect(xFraction: 0.35, yFraction: 0.18, wFraction: 0.30, hFraction: 0.10)),
+            NamedRect(name: "leftCheek", rect: subRect(xFraction: 0.18, yFraction: 0.55, wFraction: 0.16, hFraction: 0.14)),
+            NamedRect(name: "rightCheek", rect: subRect(xFraction: 0.66, yFraction: 0.55, wFraction: 0.16, hFraction: 0.14)),
         ]
     }
 
@@ -165,8 +168,13 @@ final class SkinSampler: SkinSampling, Sendable {
                 // Reject pixels that are clearly not skin: very dark, very bright,
                 // or have neutral/blue cast (eyes, lips, shadows, background bleed).
                 let brightness = (r + g + b) / 3.0
-                if brightness < 0.12 || brightness > 0.97 { continue }
+                // Tightened floor (0.12 → 0.25) rejects stubble, deep shadow,
+                // and hair fringe that was leaking into the average.
+                if brightness < 0.25 || brightness > 0.97 { continue }
                 if r < g || r < b { continue }  // skin is always red-dominant
+                // Skin has meaningful red-over-green spread; near-grey pixels
+                // are almost always shadow or background, not skin.
+                if (r - g) < 0.04 { continue }
 
                 rSum += r
                 gSum += g

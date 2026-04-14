@@ -196,7 +196,7 @@ private struct AnalysisResultView: View {
             VStack(spacing: 20) {
                 AnnotatedPhoto(image: image, outcome: outcome)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 280)
+                    .frame(maxHeight: 320)
                     .clipShape(RoundedRectangle(cornerRadius: 18))
 
                 SkinSwatchSummary(sample: outcome.skinSample)
@@ -243,35 +243,29 @@ private struct AnnotatedPhoto: View {
     let outcome: AnalysisOutcome
 
     var body: some View {
-        GeometryReader { geo in
-            let displaySize = geo.size
-            let scale = min(
-                displaySize.width / outcome.imageSize.width,
-                displaySize.height / outcome.imageSize.height
-            )
-            let scaledWidth = outcome.imageSize.width * scale
-            let scaledHeight = outcome.imageSize.height * scale
-            let offsetX = (displaySize.width - scaledWidth) / 2
-            let offsetY = (displaySize.height - scaledHeight) / 2
-
-            ZStack(alignment: .topLeading) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-
-                Rectangle()
-                    .stroke(Color.warmRose, lineWidth: 2)
-                    .frame(
-                        width: outcome.faceBox.width * scale,
-                        height: outcome.faceBox.height * scale
-                    )
-                    .offset(
-                        x: offsetX + outcome.faceBox.origin.x * scale,
-                        y: offsetY + outcome.faceBox.origin.y * scale
-                    )
+        // Lock the container to the image's aspect ratio so there's no
+        // letterboxing — then the face box maps proportionally by simple
+        // fraction-of-container math and coordinate systems line up exactly.
+        Image(uiImage: image)
+            .resizable()
+            .aspectRatio(outcome.imageSize, contentMode: .fit)
+            .overlay {
+                GeometryReader { geo in
+                    let scaleX = geo.size.width / outcome.imageSize.width
+                    let scaleY = geo.size.height / outcome.imageSize.height
+                    Rectangle()
+                        .stroke(Color.warmRose, lineWidth: 2)
+                        .frame(
+                            width: outcome.faceBox.width * scaleX,
+                            height: outcome.faceBox.height * scaleY
+                        )
+                        .position(
+                            x: (outcome.faceBox.midX) * scaleX,
+                            y: (outcome.faceBox.midY) * scaleY
+                        )
+                }
             }
-        }
-        .background(Color.warmBeige.opacity(0.4))
+            .background(Color.warmBeige.opacity(0.4))
     }
 }
 

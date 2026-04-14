@@ -74,7 +74,7 @@ final class AnalysisPipeline: AnalysisPipelining, Sendable {
         let pixelSize = CGSize(width: cgImage.width, height: cgImage.height)
         let ciImage = CIImage(cgImage: cgImage)
 
-        let face = try await faceDetector.detectFace(in: ciImage, pixelSize: pixelSize)
+        let face = try await faceDetector.detectFace(in: cgImage, pixelSize: pixelSize)
         let sample = try skinSampler.sample(image: ciImage, face: face, pixelSize: pixelSize)
         let classification = classifier.classify(skin: sample.averageLAB, palettes: palettes)
 

@@ -18,12 +18,14 @@ final class DrapingViewModel: BaseViewModel {
         case idle               // waiting for user to pick selfie
         case processing         // lip detection + rendering all shades
         case pairing(index: Int) // presenting A/B pair N
-        case finished           // all pairs answered or confidence hit
+        case tiebreaker         // presenting the Stage 3 final A/B
+        case finished           // quiz complete
     }
 
     @Published private(set) var phase: Phase = .idle
     @Published private(set) var selfie: UIImage?
     @Published private(set) var pairs: [DrapingPair] = []
+    @Published private(set) var tiebreakerPair: DrapingPair?
     @Published private(set) var renderedImages: [String: UIImage] = [:] // keyed by shade.id
     @Published private(set) var usedHeuristicLipRegion: Bool = false
     @Published private(set) var pickedShadeIds: [String] = [] // in order
@@ -35,9 +37,15 @@ final class DrapingViewModel: BaseViewModel {
     private let lipDetector: LipRegionDetecting
     private let renderer: LipRendering
     private let pairSelector: DrapingPairSelecting
+    private let tiebreakerBuilder: TiebreakerBuilding
     private let scorer: QuestionnaireScoring
     private let repository: AnalysisRepositoryProtocol?
     private let session: UserSession?
+
+    // Stage 3 tiebreaker applies a stronger likelihood weight (squared in
+    // effect — calling the scorer update twice). Makes the final A/B
+    // decisively break ambiguous top-2 situations.
+    private let tiebreakerWeightFactor = 2
 
     // Target number of A/B pairs to present. 4 is the sweet spot between
     // information gain and user fatigue — each pair carries ~1.8/0.55 weights,
@@ -55,6 +63,7 @@ final class DrapingViewModel: BaseViewModel {
         lipDetector: LipRegionDetecting = LipRegionDetector(),
         renderer: LipRendering = LipRenderer(),
         pairSelector: DrapingPairSelecting = InformationGainPairSelector(),
+        tiebreakerBuilder: TiebreakerBuilding = TopSeasonTiebreakerBuilder(),
         scorer: QuestionnaireScoring = BayesianSeasonScorer()
     ) {
         self.posterior = posterior
@@ -63,6 +72,7 @@ final class DrapingViewModel: BaseViewModel {
         self.lipDetector = lipDetector
         self.renderer = renderer
         self.pairSelector = pairSelector
+        self.tiebreakerBuilder = tiebreakerBuilder
         self.scorer = scorer
     }
 
@@ -141,39 +151,81 @@ final class DrapingViewModel: BaseViewModel {
     // MARK: - Answering
 
     func pick(shade: DrapingShade, rejected: DrapingShade) {
-        // Negative-framed prompt: user tapped the REJECTED shade (the one
-        // they said "makes you look tired"). The winner is the other shade,
-        // so we apply the WINNER's likelihood to the posterior.
         _ = rejected
         pickedShadeIds.append(shade.id)
-        posterior.value = scorer.update(
-            posterior: posterior.value,
-            with: shade.likelihood,
-            palettes: posterior.palettes
-        )
+
+        // Tiebreaker uses positive framing ("which feels more like you?"),
+        // so the winner is what the user tapped. Stage 2 pairs use negative
+        // framing ("which makes you look tired?") and the ViewModel already
+        // receives the computed winner from the view. Either way, apply
+        // the winner's likelihood to the posterior.
+        let repeats = (phase == .tiebreaker) ? tiebreakerWeightFactor : 1
+        for _ in 0..<repeats {
+            posterior.value = scorer.update(
+                posterior: posterior.value,
+                with: shade.likelihood,
+                palettes: posterior.palettes
+            )
+        }
         advance()
     }
 
     private func advance() {
-        guard case .pairing(let index) = phase else { return }
-        let next = index + 1
-        if next >= pairs.count || topConfidence >= earlyStopThreshold {
+        if case .pairing(let index) = phase {
+            let next = index + 1
+            if next >= pairs.count {
+                moveToTiebreakerOrFinish()
+            } else {
+                phase = .pairing(index: next)
+            }
+            return
+        }
+        if phase == .tiebreaker {
             phase = .finished
+        }
+    }
+
+    // Between Stage 2 and Stage 3: build the final A/B from the top-2
+    // seasons. If no meaningful runner-up exists (e.g. one season already
+    // dominates), skip Stage 3 and go straight to finished.
+    private func moveToTiebreakerOrFinish() {
+        guard topConfidence < earlyStopThreshold else {
+            phase = .finished
+            return
+        }
+        if let pair = tiebreakerBuilder.buildTiebreaker(
+            from: DrapingShadeCatalog.all,
+            posterior: posterior.value,
+            palettes: posterior.palettes
+        ) {
+            tiebreakerPair = pair
+            phase = .tiebreaker
         } else {
-            phase = .pairing(index: next)
+            phase = .finished
         }
     }
 
     // MARK: - Derived
 
     var currentPair: DrapingPair? {
-        guard case .pairing(let index) = phase, pairs.indices.contains(index) else { return nil }
-        return pairs[index]
+        if case .pairing(let index) = phase, pairs.indices.contains(index) {
+            return pairs[index]
+        }
+        if phase == .tiebreaker {
+            return tiebreakerPair
+        }
+        return nil
     }
 
     var currentIndex: Int {
         if case .pairing(let index) = phase { return index }
+        if phase == .tiebreaker { return pairs.count }
         return pairs.count
+    }
+
+    // Total pair count including the Stage 3 tiebreaker when it's been built.
+    var totalPairCount: Int {
+        pairs.count + (tiebreakerPair == nil ? 0 : 1)
     }
 
     var topConfidence: Double {

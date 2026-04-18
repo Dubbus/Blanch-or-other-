@@ -17,8 +17,8 @@ struct DrapingPairView: View {
         VStack(alignment: .leading, spacing: 16) {
             progressHeader
             prompt
-            optionCard(image: viewModel.renderedImages[pair.shadeA.id], shade: pair.shadeA, rejected: pair.shadeA, winner: pair.shadeB, label: "A")
-            optionCard(image: viewModel.renderedImages[pair.shadeB.id], shade: pair.shadeB, rejected: pair.shadeB, winner: pair.shadeA, label: "B")
+            optionCard(image: viewModel.renderedImages[pair.shadeA.id], shade: pair.shadeA, other: pair.shadeB, label: "A")
+            optionCard(image: viewModel.renderedImages[pair.shadeB.id], shade: pair.shadeB, other: pair.shadeA, label: "B")
             helperText
             Spacer(minLength: 0)
         }
@@ -28,11 +28,21 @@ struct DrapingPairView: View {
 
     private var progressHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Pair \(viewModel.currentIndex + 1) of \(viewModel.pairs.count)")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.secondary)
+            HStack {
+                Text("Pair \(viewModel.currentIndex + 1) of \(viewModel.totalPairCount)")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                if pair.isTiebreaker {
+                    Text("Final Call")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Capsule().fill(Color.warmBrown))
+                }
+            }
             GeometryReader { geo in
-                let totalPairs = max(viewModel.pairs.count, 1)
+                let totalPairs = max(viewModel.totalPairCount, 1)
                 let fraction = CGFloat(viewModel.currentIndex) / CGFloat(totalPairs)
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 3).fill(Color.warmBeige)
@@ -52,7 +62,11 @@ struct DrapingPairView: View {
     }
 
     @ViewBuilder
-    private func optionCard(image: UIImage?, shade: DrapingShade, rejected: DrapingShade, winner: DrapingShade, label: String) -> some View {
+    private func optionCard(image: UIImage?, shade: DrapingShade, other: DrapingShade, label: String) -> some View {
+        // Negative framing: tapping this card means this shade looks bad → the OTHER shade wins.
+        // Positive framing (tiebreaker): tapping this card means this shade is preferred → THIS shade wins.
+        let winner = pair.isTiebreaker ? shade : other
+        let rejected = pair.isTiebreaker ? other : shade
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
                 viewModel.pick(shade: winner, rejected: rejected)
@@ -109,10 +123,13 @@ struct DrapingPairView: View {
             Image(systemName: "info.circle")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            Text("Tap whichever shade makes your face look worse. Negative selection — we score the other one as a win.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            Text(pair.isTiebreaker
+                ? "Tap whichever shade feels most like you. Your pick breaks the tie."
+                : "Tap whichever shade makes your face look worse. Negative selection — we score the other one as a win."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

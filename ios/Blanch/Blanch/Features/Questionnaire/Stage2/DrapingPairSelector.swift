@@ -18,7 +18,12 @@ struct DrapingPair: Sendable, Identifiable, Hashable {
     // Prompt is intentionally negative-framed to exploit the psychological
     // gap between "pick what's good" (hard) and "pick what's wrong" (easy).
     // Rotated across pairs so the quiz doesn't feel repetitive.
+    // Stage 3 (tiebreaker) flips this to positive framing.
     let prompt: String
+
+    // True for the Stage 3 confirmation pair. Tiebreaker answers carry
+    // double-weight in scoring and the UI shows a "Final call" badge.
+    var isTiebreaker: Bool = false
 }
 
 protocol DrapingPairSelecting: Sendable {
@@ -28,6 +33,70 @@ protocol DrapingPairSelecting: Sendable {
         palettes: [SeasonPalette],
         count: Int
     ) -> [DrapingPair]
+}
+
+// MARK: - Tiebreaker Builder
+//
+// Given the Stage 2 posterior, construct the single Stage 3 pair:
+// one shade that best represents the top-ranked season, one that best
+// represents the runner-up. "Best represents" = the shade that most
+// boosts that specific season's probability if the user picked it.
+
+protocol TiebreakerBuilding: Sendable {
+    func buildTiebreaker(
+        from catalog: [DrapingShade],
+        posterior: [String: Double],
+        palettes: [SeasonPalette]
+    ) -> DrapingPair?
+}
+
+struct TopSeasonTiebreakerBuilder: TiebreakerBuilding {
+    func buildTiebreaker(
+        from catalog: [DrapingShade],
+        posterior: [String: Double],
+        palettes: [SeasonPalette]
+    ) -> DrapingPair? {
+        let ranked = posterior.rankedSeasons
+        guard ranked.count >= 2 else { return nil }
+        let topName = ranked[0].name
+        let runnerName = ranked[1].name
+
+        let scorer = BayesianSeasonScorer()
+
+        // Pick the shade that most boosts the top season if the user favors it.
+        let shadeForTop = catalog.max { a, b in
+            boostFor(season: topName, shade: a, posterior: posterior, palettes: palettes, scorer: scorer)
+                < boostFor(season: topName, shade: b, posterior: posterior, palettes: palettes, scorer: scorer)
+        }
+        // Same for runner-up — but reject the same shade.
+        let shadeForRunner = catalog
+            .filter { $0.id != shadeForTop?.id }
+            .max { a, b in
+                boostFor(season: runnerName, shade: a, posterior: posterior, palettes: palettes, scorer: scorer)
+                    < boostFor(season: runnerName, shade: b, posterior: posterior, palettes: palettes, scorer: scorer)
+            }
+
+        guard let a = shadeForTop, let b = shadeForRunner, a.id != b.id else { return nil }
+
+        return DrapingPair(
+            id: "tiebreaker",
+            shadeA: a,
+            shadeB: b,
+            prompt: "Final call — which one feels more like you?",
+            isTiebreaker: true
+        )
+    }
+
+    private func boostFor(
+        season: String,
+        shade: DrapingShade,
+        posterior: [String: Double],
+        palettes: [SeasonPalette],
+        scorer: BayesianSeasonScorer
+    ) -> Double {
+        let updated = scorer.update(posterior: posterior, with: shade.likelihood, palettes: palettes)
+        return updated[season] ?? 0
+    }
 }
 
 struct InformationGainPairSelector: DrapingPairSelecting {

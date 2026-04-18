@@ -110,6 +110,12 @@ struct QuestionnaireHostView: View {
             } else {
                 ProgressView().controlSize(.large)
             }
+        case .tiebreaker:
+            if let pair = drapingVM.tiebreakerPair {
+                DrapingPairView(viewModel: drapingVM, pair: pair)
+            } else {
+                ProgressView().controlSize(.large)
+            }
         case .finished:
             // Auto-transition is handled by onChange; show loader briefly.
             ProgressView().controlSize(.large)

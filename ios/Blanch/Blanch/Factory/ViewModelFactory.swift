@@ -47,7 +47,7 @@ final class ViewModelFactory {
         networkClient: NetworkClientProtocol,
         authManager: AuthManager,
         userSession: UserSession,
-        baseURL: String = "http://localhost:8001/api/v1"
+        baseURL: String = "https://blanch-api.onrender.com/api/v1"
     ) {
         self.networkClient = networkClient
         self.authManager = authManager

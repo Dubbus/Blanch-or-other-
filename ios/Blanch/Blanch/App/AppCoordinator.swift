@@ -24,7 +24,7 @@ final class AppCoordinator: ObservableObject {
     private let viewModelFactory: ViewModelFactory
 
     init() {
-        let client = NetworkClient(baseURL: "http://localhost:8001/api/v1")
+        let client = NetworkClient(baseURL: "https://blanch-api.onrender.com/api/v1")
         self.networkClient = client
         self.authManager = AuthManager.shared
         self.viewModelFactory = ViewModelFactory(

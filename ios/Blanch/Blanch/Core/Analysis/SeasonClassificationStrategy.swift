@@ -58,8 +58,10 @@ struct SkinToneAxisStrategy: SeasonClassificationStrategy {
         let valueScore = valueAlignment(skinL: skin.l, category: palette.category)
         let chromaScore = chromaAlignment(skinChroma: skin.chroma, name: palette.name)
 
-        // Weighted sum: undertone matters most, then value, then chroma.
-        return (undertoneScore * 0.50) + (valueScore * 0.30) + (chromaScore * 0.20)
+        // Weighted sum: undertone and value are equally important — otherwise
+        // fair warm-toned subjects get pulled toward Deep/True variants when
+        // they should land on Light. Chroma is the tiebreaker.
+        return (undertoneScore * 0.40) + (valueScore * 0.40) + (chromaScore * 0.20)
     }
 
     // Returns 0...1. Skin b* > 0 is warm (yellow), < 0 is cool (blue).

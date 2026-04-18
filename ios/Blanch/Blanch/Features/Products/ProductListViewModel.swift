@@ -16,13 +16,22 @@ final class ProductListViewModel: BaseViewModel {
 
     private let repository: ProductRepositoryProtocol
     private let strategy: RecommendationStrategy?
+    private let session: UserSession?
 
-    init(repository: ProductRepositoryProtocol, strategy: RecommendationStrategy? = nil) {
+    init(
+        repository: ProductRepositoryProtocol,
+        strategy: RecommendationStrategy? = nil,
+        session: UserSession? = nil
+    ) {
         self.repository = repository
         self.strategy = strategy
+        self.session = session
     }
 
     override func fetchData() async throws {
+        // Pick up the latest saved season (set by the quiz or analysis flow).
+        userSeasonId = session?.currentSeasonId.flatMap { $0.isEmpty ? nil : $0 }
+
         // Load brands on first fetch
         if brands.isEmpty {
             brands = try await repository.getBrands()

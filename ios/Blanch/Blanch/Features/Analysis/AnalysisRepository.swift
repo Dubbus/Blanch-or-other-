@@ -10,6 +10,11 @@ import Foundation
 
 protocol AnalysisRepositoryProtocol: AnyObject, Sendable {
     func submit(outcome: AnalysisOutcome) async throws -> AnalysisResultOut
+    func submitQuizResult(
+        primarySeasonName: String,
+        rawScoresByName: [String: Double],
+        source: String
+    ) async throws -> AnalysisResultOut
     func getMyAnalysis() async throws -> AnalysisFreeResult
 }
 
@@ -82,6 +87,47 @@ final class AnalysisRepository: AnalysisRepositoryProtocol, Sendable {
             selfieMetadata: [
                 "source": "photo_picker",
                 "pipeline_version": "1",
+            ]
+        )
+
+        let token = await authManager.accessToken
+        let request = try RequestBuilder(baseURL: baseURL)
+            .setPath(Endpoints.analysis)
+            .setMethod("POST")
+            .setAuth(token)
+            .setBody(body)
+            .build()
+
+        return try await networkClient.request(request)
+    }
+
+    // Quiz-based submission — no skin sample required. Same backend endpoint
+    // as the CV pipeline submit; the selfieMetadata.source field distinguishes
+    // them server-side for analytics.
+    func submitQuizResult(
+        primarySeasonName: String,
+        rawScoresByName: [String: Double],
+        source: String
+    ) async throws -> AnalysisResultOut {
+        let idsByName = try await loadSeasonIdMap()
+
+        guard let primaryId = idsByName[primarySeasonName] else {
+            throw AnalysisRepositoryError.seasonNotFound(name: primarySeasonName)
+        }
+
+        var rawScoresById: [String: Double] = [:]
+        for (name, score) in rawScoresByName {
+            if let id = idsByName[name] {
+                rawScoresById[id] = score
+            }
+        }
+
+        let body = AnalysisSubmitIn(
+            seasonId: primaryId,
+            rawScores: rawScoresById,
+            selfieMetadata: [
+                "source": source,
+                "pipeline_version": "quiz_v1",
             ]
         )
 

@@ -18,6 +18,7 @@ import Foundation
 final class ViewModelFactory {
     private let networkClient: NetworkClientProtocol
     private let authManager: AuthManager
+    let userSession: UserSession
 
     // Repositories (lazily created, shared across ViewModels)
     private lazy var productRepository: ProductRepository = {
@@ -38,16 +39,22 @@ final class ViewModelFactory {
 
     private let baseURL: String
 
-    init(networkClient: NetworkClientProtocol, authManager: AuthManager, baseURL: String = "http://localhost:8001/api/v1") {
+    init(
+        networkClient: NetworkClientProtocol,
+        authManager: AuthManager,
+        userSession: UserSession,
+        baseURL: String = "http://localhost:8001/api/v1"
+    ) {
         self.networkClient = networkClient
         self.authManager = authManager
+        self.userSession = userSession
         self.baseURL = baseURL
     }
 
     // MARK: - Product ViewModels
 
     func makeProductListViewModel() -> ProductListViewModel {
-        ProductListViewModel(repository: productRepository)
+        ProductListViewModel(repository: productRepository, session: userSession)
     }
 
     func makeProductDetailViewModel(productId: String) -> ProductDetailViewModel {
@@ -64,6 +71,23 @@ final class ViewModelFactory {
 
     func makeAnalysisViewModel() -> AnalysisViewModel {
         AnalysisViewModel(pipeline: analysisPipeline, repository: analysisRepository)
+    }
+
+    // MARK: - Questionnaire ViewModels
+
+    func makeQuestionnaireHost() -> (
+        shared: SharedPosterior,
+        stage1: QuestionnaireViewModel,
+        draping: DrapingViewModel
+    ) {
+        let shared = SharedPosterior()
+        let stage1 = QuestionnaireViewModel(posterior: shared)
+        let draping = DrapingViewModel(
+            posterior: shared,
+            repository: analysisRepository,
+            session: userSession
+        )
+        return (shared, stage1, draping)
     }
 
     // MARK: - Strategy-based ViewModels

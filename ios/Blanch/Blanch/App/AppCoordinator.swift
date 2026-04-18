@@ -29,7 +29,8 @@ final class AppCoordinator: ObservableObject {
         self.authManager = AuthManager.shared
         self.viewModelFactory = ViewModelFactory(
             networkClient: client,
-            authManager: AuthManager.shared
+            authManager: AuthManager.shared,
+            userSession: UserSession()
         )
     }
 
@@ -49,6 +50,9 @@ final class AppCoordinator: ObservableObject {
                     viewModel: self.viewModelFactory.makeAnalysisViewModel()
                 )
             }
+            Tab("Quiz", systemImage: "checklist") {
+                questionnaireHostView()
+            }
             Tab("Profile", systemImage: "person.crop.circle") {
                 ProfilePlaceholderView()
             }
@@ -60,6 +64,15 @@ final class AppCoordinator: ObservableObject {
         ProductListView(
             viewModel: self.viewModelFactory.makeProductListViewModel(),
             viewModelFactory: self.viewModelFactory
+        )
+    }
+
+    private func questionnaireHostView() -> some View {
+        let trio = viewModelFactory.makeQuestionnaireHost()
+        return QuestionnaireHostView(
+            shared: trio.shared,
+            stage1VM: trio.stage1,
+            drapingVM: trio.draping
         )
     }
 }

@@ -56,6 +56,7 @@
 		B25B2F249BBDA365DB5C76C7 /* DrapingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA05821E9BC934E31208D9A7 /* DrapingViewModel.swift */; };
 		BC0751D7992CD095541E0800 /* InfluencerDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1382744A07FD87B5A99605C3 /* InfluencerDTO.swift */; };
 		C0370A703CC3FEF2638AEF24 /* SeasonPaletteProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691EE7225D80BCDD8FD74D1 /* SeasonPaletteProviding.swift */; };
+		D09D041B71EA97599401CB54 /* ResultExplainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D4D4BC23D3573FC1550472 /* ResultExplainer.swift */; };
 		DD3BC7C839899C1378E5B434 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC951451B739012477D640A /* RequestBuilder.swift */; };
 		DEB92A03A9663CAC580D3F86 /* FaceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6D49B8F2B28BEF50911175 /* FaceDetector.swift */; };
 		E026EBEA9F3FD1E4EF8F881A /* SeasonPalettes.json in Resources */ = {isa = PBXBuildFile; fileRef = C39F706988C70A839646251C /* SeasonPalettes.json */; };
@@ -73,6 +74,7 @@
 		0F78CBA081C71A3A7E374EA3 /* AnalysisViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisViewModel.swift; sourceTree = "<group>"; };
 		114F681962143ADBCA2A4AEE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		1382744A07FD87B5A99605C3 /* InfluencerDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerDTO.swift; sourceTree = "<group>"; };
+		26D4D4BC23D3573FC1550472 /* ResultExplainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultExplainer.swift; sourceTree = "<group>"; };
 		333EC58B86278EE803B06EA4 /* DrapingPairSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrapingPairSelector.swift; sourceTree = "<group>"; };
 		35C9C4AD406AB3A26F9810C1 /* InfluencerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfluencerListView.swift; sourceTree = "<group>"; };
 		378E7B3A22D1C12B25E28F20 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				B46FE9CA3178E6B9F528A6EB /* QuestionnaireScorer.swift */,
+				26D4D4BC23D3573FC1550472 /* ResultExplainer.swift */,
 			);
 			path = Scoring;
 			sourceTree = "<group>";
@@ -434,25 +437,25 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		"TEMP_5A182C91-0B78-4CB6-A4CA-3F45A4A5F7D6" /* Combos */ = {
+		"TEMP_2C826AAF-4AD8-4AFC-9816-C7DEF5180D5A" /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
+		"TEMP_4CFA5644-92E5-4F58-863F-DD9CD2FC4DFF" /* Combos */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Combos;
 			sourceTree = "<group>";
 		};
-		"TEMP_D237AE43-FD50-4C8E-A105-6B7C4EFEFCA5" /* Profile */ = {
+		"TEMP_DF74745B-2521-4478-BF0C-7492D828CA07" /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Profile;
-			sourceTree = "<group>";
-		};
-		"TEMP_F0B968F5-EA5E-4B28-BDC4-D56F5016CF58" /* Subscription */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Subscription;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -571,6 +574,7 @@
 				8E6426A82A0F0EA16609513F /* RecommendationStrategy.swift in Sources */,
 				A23936619E49B2AAC728B047 /* RepositoryProtocol.swift in Sources */,
 				DD3BC7C839899C1378E5B434 /* RequestBuilder.swift in Sources */,
+				D09D041B71EA97599401CB54 /* ResultExplainer.swift in Sources */,
 				39539A8CC1ACE63F771C6A32 /* SeasonBasedStrategy.swift in Sources */,
 				06DFADD3891E7D6400F7AB30 /* SeasonClassificationStrategy.swift in Sources */,
 				03FBCDDC8FA1411DDA4C4704 /* SeasonDTO.swift in Sources */,

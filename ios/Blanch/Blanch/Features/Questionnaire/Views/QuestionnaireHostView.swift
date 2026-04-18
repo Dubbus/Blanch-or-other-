@@ -43,6 +43,7 @@ struct QuestionnaireHostView: View {
                     FinalResultView(
                         shared: shared,
                         drapingVM: drapingVM,
+                        explanation: explanation(),
                         onRestart: {
                             drapingVM.restart()
                             stage1VM.restart()
@@ -65,6 +66,14 @@ struct QuestionnaireHostView: View {
         .onChange(of: drapingVM.phase) { _, phase in
             if case .finished = phase { stage = .finalResult }
         }
+    }
+
+    private func explanation() -> ResultExplanation {
+        ResultExplainer().explain(
+            selectedAnswerIds: stage1VM.selectedAnswerIds,
+            pickedShadeIds: drapingVM.pickedShadeIds,
+            topSeasonName: shared.topSeasonName ?? ""
+        )
     }
 
     private var title: String {

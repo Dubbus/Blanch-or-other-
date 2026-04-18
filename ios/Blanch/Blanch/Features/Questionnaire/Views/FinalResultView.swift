@@ -10,6 +10,7 @@ import SwiftUI
 struct FinalResultView: View {
     @ObservedObject var shared: SharedPosterior
     @ObservedObject var drapingVM: DrapingViewModel
+    let explanation: ResultExplanation
     let onRestart: () -> Void
 
     var body: some View {
@@ -19,12 +20,103 @@ struct FinalResultView: View {
                 selfieWithTopShade
                 topCard
                 saveSection
+                whyCard
                 breakdown
                 footnote
                 restartButton
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
+        }
+    }
+
+    // MARK: - Why this season?
+
+    private var whyCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 6) {
+                Image(systemName: "text.magnifyingglass")
+                    .foregroundStyle(Color.warmBrown)
+                Text("Why this season?")
+                    .font(.subheadline.weight(.semibold))
+            }
+
+            Text(explanation.headline)
+                .font(.body)
+                .fixedSize(horizontal: false, vertical: true)
+
+            axisBar(label: "Undertone", leftLabel: "Cool", rightLabel: "Warm", score: explanation.undertoneScore)
+            axisBar(label: "Depth", leftLabel: "Light", rightLabel: "Deep", score: explanation.depthScore)
+
+            if !explanation.reasons.isEmpty {
+                Divider().padding(.vertical, 2)
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(explanation.reasons) { reason in
+                        reasonRow(reason)
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.white)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.warmBeige, lineWidth: 1)
+        )
+    }
+
+    // Axis bar: score is -1..+1. Marker position maps linearly to that range.
+    private func axisBar(label: String, leftLabel: String, rightLabel: String, score: Double) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text(label)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 4).fill(Color.warmBeige)
+                    let normalized = (score + 1.0) / 2.0        // 0...1
+                    let clamped = max(0.02, min(0.98, normalized))
+                    Circle()
+                        .fill(Color.warmBrown)
+                        .frame(width: 14, height: 14)
+                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                        .offset(x: geo.size.width * clamped - 7)
+                }
+            }
+            .frame(height: 14)
+            HStack {
+                Text(leftLabel).font(.caption2).foregroundStyle(.secondary)
+                Spacer()
+                Text(rightLabel).font(.caption2).foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func reasonRow(_ reason: ExplainerReason) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: reason.icon)
+                .foregroundStyle(iconTint(reason.direction))
+                .frame(width: 18)
+                .padding(.top, 2)
+            Text(reason.text)
+                .font(.subheadline)
+                .foregroundStyle(Color.primary)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+    }
+
+    private func iconTint(_ direction: Direction) -> Color {
+        switch direction {
+        case .warm, .deep: return Color.warmBrown
+        case .cool, .light: return Color.warmTerra
+        case .neutral: return Color.secondary
         }
     }
 

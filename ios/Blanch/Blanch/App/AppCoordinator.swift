@@ -54,7 +54,7 @@ final class AppCoordinator: ObservableObject {
                 questionnaireHostView()
             }
             Tab("Profile", systemImage: "person.crop.circle") {
-                ProfilePlaceholderView()
+                profileTab()
             }
         }
         .tint(Color("AccentWarm", bundle: nil))
@@ -75,21 +75,37 @@ final class AppCoordinator: ObservableObject {
             drapingVM: trio.draping
         )
     }
+
+    @ViewBuilder
+    private func profileTab() -> some View {
+        NavigationStack {
+            ProfileGate(
+                authManager: authManager,
+                session: viewModelFactory.userSession,
+                viewModelFactory: viewModelFactory
+            )
+            .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
 }
 
-// MARK: - Placeholder Views (temporary)
+// MARK: - Profile Gate
+//
+// Switches between SignInView (logged out) and ProfileView (logged in)
+// based on AuthManager state. Observes AuthManager so it updates
+// reactively when the user logs in or out.
 
-struct ProfilePlaceholderView: View {
+private struct ProfileGate: View {
+    @ObservedObject var authManager: AuthManager
+    @ObservedObject var session: UserSession
+    let viewModelFactory: ViewModelFactory
+
     var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "person.crop.circle")
-                .font(.system(size: 60))
-                .foregroundStyle(.secondary)
-            Text("Profile")
-                .font(.title2.weight(.semibold))
-            Text("Sign in to save your results")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+        if authManager.isAuthenticated {
+            ProfileView(authManager: authManager, session: session)
+        } else {
+            SignInView(viewModel: viewModelFactory.makeAuthViewModel())
         }
     }
 }

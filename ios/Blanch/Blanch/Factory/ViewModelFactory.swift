@@ -37,6 +37,10 @@ final class ViewModelFactory {
         AnalysisPipeline()
     }()
 
+    private lazy var authRepository: AuthRepository = {
+        AuthRepository(networkClient: networkClient, baseURL: baseURL)
+    }()
+
     private let baseURL: String
 
     init(
@@ -71,6 +75,12 @@ final class ViewModelFactory {
 
     func makeAnalysisViewModel() -> AnalysisViewModel {
         AnalysisViewModel(pipeline: analysisPipeline, repository: analysisRepository)
+    }
+
+    // MARK: - Auth ViewModels
+
+    func makeAuthViewModel() -> AuthViewModel {
+        AuthViewModel(repository: authRepository, authManager: authManager)
     }
 
     // MARK: - Questionnaire ViewModels

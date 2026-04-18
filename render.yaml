@@ -1,0 +1,23 @@
+databases:
+  - name: blanch-db
+    databaseName: blanch
+    user: blanch
+    plan: free
+
+services:
+  - type: web
+    name: blanch-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: blanch-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: https://blanch-api.onrender.com

@@ -437,25 +437,25 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		"TEMP_2C826AAF-4AD8-4AFC-9816-C7DEF5180D5A" /* Subscription */ = {
+		"TEMP_891522FA-398E-4DBF-9D71-FDC650A84FE7" /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Subscription;
+			path = Profile;
 			sourceTree = "<group>";
 		};
-		"TEMP_4CFA5644-92E5-4F58-863F-DD9CD2FC4DFF" /* Combos */ = {
+		"TEMP_9E630AAD-D5EC-4A61-89BD-7FDAF683EDF1" /* Combos */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Combos;
 			sourceTree = "<group>";
 		};
-		"TEMP_DF74745B-2521-4478-BF0C-7492D828CA07" /* Profile */ = {
+		"TEMP_BDCEE9A4-4C43-40D7-8D72-3DFA14AE6A11" /* Subscription */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Profile;
+			path = Subscription;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

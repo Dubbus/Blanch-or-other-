@@ -28,4 +28,5 @@ targets:
         CFBundleVersion: "1"
         UILaunchScreen: {}
         NSCameraUsageDescription: "Blanch needs camera access to analyze your skin tone for color season matching."
+        NSPhotoLibraryUsageDescription: "Blanch uses your photo library to select a selfie for lip draping and skin tone analysis."
         ITSAppUsesNonExemptEncryption: false

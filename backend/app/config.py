@@ -11,6 +11,14 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:3000,http://localhost:8081"
 
     @property
+    def async_database_url(self) -> str:
+        # Render injects DATABASE_URL as postgresql:// — asyncpg needs postgresql+asyncpg://
+        url = self.database_url
+        if url.startswith("postgresql://"):
+            return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return url
+
+    @property
     def origins(self) -> list[str]:
         return [o.strip() for o in self.allowed_origins.split(",")]
 

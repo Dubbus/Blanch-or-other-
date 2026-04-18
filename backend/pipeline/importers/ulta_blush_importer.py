@@ -94,7 +94,7 @@ async def load_season_ids(session: AsyncSession) -> dict[str, uuid.UUID]:
 
 
 async def import_csv(csv_path: Path) -> None:
-    engine = create_async_engine(settings.database_url, echo=False)
+    engine = create_async_engine(settings.async_database_url, echo=False)
     Session = async_sessionmaker(engine, expire_on_commit=False)
 
     with open(csv_path, newline="", encoding="utf-8") as f:

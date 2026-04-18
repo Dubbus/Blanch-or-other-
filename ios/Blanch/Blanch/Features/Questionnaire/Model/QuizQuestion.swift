@@ -35,4 +35,10 @@ struct AnswerLikelihood: Sendable, Hashable {
     // spring→light-leaning, summer→mid-light, autumn→mid-deep, winter→deep-leaning.
     var depthLight: Double = 1.0
     var depthDeep: Double = 1.0
+    // Chroma/clarity axis — the key within-family discriminator.
+    // chromaVivid > 1.0 favors Bright/True seasons (vivid, saturated palettes).
+    // chromaMuted > 1.0 favors Soft/Light seasons (grayed, muted palettes).
+    // Applied per-season via fraction weights; defaults neutral (1.0 = no signal).
+    var chromaVivid: Double = 1.0
+    var chromaMuted: Double = 1.0
 }

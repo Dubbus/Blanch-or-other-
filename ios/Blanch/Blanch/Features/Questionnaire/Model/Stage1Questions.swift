@@ -141,13 +141,19 @@ enum Stage1Questions {
                 id: "pure_white",
                 label: "Crisp, optical white",
                 detail: "Clean and bright",
-                likelihood: AnswerLikelihood(undertoneWarm: 0.75, undertoneCool: 1.35)
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 0.75, undertoneCool: 1.35,
+                    chromaVivid: 1.35, chromaMuted: 0.75
+                )
             ),
             QuizAnswer(
                 id: "cream",
                 label: "Cream or ivory",
                 detail: "Softer, yellow-tinged",
-                likelihood: AnswerLikelihood(undertoneWarm: 1.35, undertoneCool: 0.75)
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.35, undertoneCool: 0.75,
+                    chromaVivid: 0.75, chromaMuted: 1.35
+                )
             ),
             QuizAnswer(
                 id: "both",
@@ -173,14 +179,18 @@ enum Stage1Questions {
                 detail: nil,
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.72, undertoneCool: 1.38,
-                    depthLight: 1.12, depthDeep: 0.9
+                    depthLight: 1.12, depthDeep: 0.9,
+                    chromaVivid: 1.15, chromaMuted: 0.95
                 )
             ),
             QuizAnswer(
                 id: "grey_steel",
                 label: "Grey or steel",
                 detail: "Flat, muted grey — not blue-grey",
-                likelihood: AnswerLikelihood(undertoneWarm: 0.75, undertoneCool: 1.35)
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 0.75, undertoneCool: 1.35,
+                    chromaVivid: 0.88, chromaMuted: 1.25
+                )
             ),
             QuizAnswer(
                 id: "green_teal",
@@ -230,7 +240,8 @@ enum Stage1Questions {
                 detail: "Cool-toned, no golden or yellow",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.65, undertoneCool: 1.5,
-                    depthLight: 1.35, depthDeep: 0.7
+                    depthLight: 1.35, depthDeep: 0.7,
+                    chromaVivid: 0.85, chromaMuted: 1.2
                 )
             ),
             QuizAnswer(
@@ -239,7 +250,8 @@ enum Stage1Questions {
                 detail: "Warm, yellow or reddish cast",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.5, undertoneCool: 0.65,
-                    depthLight: 1.25, depthDeep: 0.8
+                    depthLight: 1.25, depthDeep: 0.8,
+                    chromaVivid: 1.2, chromaMuted: 0.9
                 )
             ),
             QuizAnswer(
@@ -248,7 +260,8 @@ enum Stage1Questions {
                 detail: "Ash, mousy, or flat brown",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.88, undertoneCool: 1.15,
-                    depthLight: 1.05, depthDeep: 0.95
+                    depthLight: 1.05, depthDeep: 0.95,
+                    chromaVivid: 0.9, chromaMuted: 1.15
                 )
             ),
             QuizAnswer(
@@ -266,7 +279,8 @@ enum Stage1Questions {
                 detail: "Gold or reddish glints visible in sunlight",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.22, undertoneCool: 0.85,
-                    depthLight: 0.78, depthDeep: 1.35
+                    depthLight: 0.78, depthDeep: 1.35,
+                    chromaVivid: 0.9, chromaMuted: 1.1
                 )
             ),
             QuizAnswer(
@@ -275,7 +289,8 @@ enum Stage1Questions {
                 detail: "No warmth; looks almost blue-black",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.82, undertoneCool: 1.22,
-                    depthLight: 0.78, depthDeep: 1.35
+                    depthLight: 0.78, depthDeep: 1.35,
+                    chromaVivid: 1.2, chromaMuted: 0.88
                 )
             ),
             QuizAnswer(
@@ -284,7 +299,8 @@ enum Stage1Questions {
                 detail: nil,
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.5, undertoneCool: 0.65,
-                    depthLight: 0.92, depthDeep: 1.12
+                    depthLight: 0.92, depthDeep: 1.12,
+                    chromaVivid: 1.2, chromaMuted: 0.88
                 )
             )
         ]
@@ -338,19 +354,28 @@ enum Stage1Questions {
                 id: "pink_rosy",
                 label: "Pink or rosy",
                 detail: "Clean, cool-toned pink",
-                likelihood: AnswerLikelihood(undertoneWarm: 0.8, undertoneCool: 1.35)
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 0.8, undertoneCool: 1.35,
+                    chromaVivid: 1.15, chromaMuted: 0.92
+                )
             ),
             QuizAnswer(
                 id: "peach_coral",
                 label: "Peachy or coral",
                 detail: "Warm, orange-leaning",
-                likelihood: AnswerLikelihood(undertoneWarm: 1.35, undertoneCool: 0.8)
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.35, undertoneCool: 0.8,
+                    chromaVivid: 1.1, chromaMuted: 0.95
+                )
             ),
             QuizAnswer(
                 id: "red_orange",
                 label: "Red-orange or terracotta",
                 detail: "Distinctly warm and ruddy",
-                likelihood: AnswerLikelihood(undertoneWarm: 1.2, undertoneCool: 0.85)
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.2, undertoneCool: 0.85,
+                    chromaVivid: 0.9, chromaMuted: 1.12
+                )
             ),
             QuizAnswer(
                 id: "deep_red",
@@ -358,7 +383,8 @@ enum Stage1Questions {
                 detail: nil,
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.05, undertoneCool: 0.95,
-                    depthLight: 0.82, depthDeep: 1.22
+                    depthLight: 0.82, depthDeep: 1.22,
+                    chromaVivid: 0.88, chromaMuted: 1.15
                 )
             ),
             QuizAnswer(

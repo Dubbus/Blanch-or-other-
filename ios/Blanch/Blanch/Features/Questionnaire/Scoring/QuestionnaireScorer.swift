@@ -39,11 +39,12 @@ struct BayesianSeasonScorer: QuestionnaireScoring {
         return normalized(updated)
     }
 
-    // Maps per-answer axis likelihoods onto a specific season's (undertone, category).
+    // Maps per-answer axis likelihoods onto a specific season's (undertone, category, chroma).
     private func likelihoodWeight(for palette: SeasonPalette, likelihood: AnswerLikelihood) -> Double {
         let undertone = palette.undertone == "warm" ? likelihood.undertoneWarm : likelihood.undertoneCool
         let depth = depthWeight(category: palette.category, likelihood: likelihood)
-        return undertone * depth
+        let chroma = chromaWeight(name: palette.name, likelihood: likelihood)
+        return undertone * depth * chroma
     }
 
     // Category → light/deep axis. Neutral for summer/autumn (middle buckets).
@@ -54,6 +55,48 @@ struct BayesianSeasonScorer: QuestionnaireScoring {
         case "summer": return (likelihood.depthLight * 0.5 + 1.0 * 0.5)
         case "autumn": return (likelihood.depthDeep * 0.5 + 1.0 * 0.5)
         default: return 1.0
+        }
+    }
+
+    // Season-name → chroma/clarity axis. Bright/True seasons favor vivid;
+    // Soft/Light seasons favor muted. Fractions below are the signal strength
+    // each variant carries on the chroma axis — Bright carries the full signal,
+    // True carries 60%, Light/Soft carry mixed or full muted signal, etc.
+    // v = chromaVivid deviation from 1.0; m = chromaMuted deviation from 1.0.
+    private func chromaWeight(name: String, likelihood: AnswerLikelihood) -> Double {
+        let v = likelihood.chromaVivid - 1.0
+        let m = likelihood.chromaMuted - 1.0
+        switch name {
+        // Fully vivid: Bright seasons look best in the clearest, most saturated colors.
+        case "Bright Winter", "Bright Spring":
+            return 1.0 + v * 1.0
+        // Moderately vivid: True seasons prefer clear colors but not extreme saturation.
+        case "True Winter", "True Spring":
+            return 1.0 + v * 0.6
+        // Deep Winter: vivid but primarily driven by depth; mild chroma signal.
+        case "Deep Winter":
+            return 1.0 + v * 0.15 + m * 0.1
+        // Light Spring: light and clear, but not as vivid as True/Bright Spring.
+        case "Light Spring":
+            return 1.0 + v * 0.25 + m * 0.15
+        // Light Summer: cool and light; moderately muted.
+        case "Light Summer":
+            return 1.0 + m * 0.35 + v * 0.1
+        // True Summer: clearly muted, grayed palette — stronger muted signal than Autumn.
+        case "True Summer":
+            return 1.0 + m * 0.6
+        // True Autumn: medium saturation — can wear earthy-vivid (orange-red, burnt sienna)
+        // but not as muted as Soft Autumn. Separated from True Summer intentionally.
+        case "True Autumn":
+            return 1.0 + m * 0.3 + v * 0.15
+        // Dark Autumn: deep and muted; slight depth-muted lean over vivid.
+        case "Dark Autumn":
+            return 1.0 + m * 0.35 + v * 0.1
+        // Fully muted: Soft seasons always look best in grayed, toned-down colors.
+        case "Soft Summer", "Soft Autumn":
+            return 1.0 + m * 1.0
+        default:
+            return 1.0
         }
     }
 

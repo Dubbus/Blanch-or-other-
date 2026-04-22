@@ -26,7 +26,7 @@ Key differentiation vs. Colorwise:
 - Local PostgreSQL on port 5432, API on port 8001
 - No Docker needed — uses local Postgres (`psql -U $(whoami) -d blanch`)
 
-### iOS (Phase 2 complete — two-stage quiz shipped; Stage 3 tiebreaker in progress)
+### iOS (Phase 3.0 complete — full quiz shipped; calibration pass next)
 - **SwiftUI** UI layer + **class-based OOP core** for all ViewModels, Repositories, Services, Networking
 - **Swift 6.0** / Xcode 26.4 with **strict concurrency** (`SWIFT_STRICT_CONCURRENCY: complete`)
 - Deployment target: iOS 18.0
@@ -322,36 +322,69 @@ open -a Simulator
 - [x] Phase 2.7: Quiz Stage 2 — lip draping with Vision landmarks, heuristic sim fallback, CoreImage pipeline, 8-shade catalog, information-gain pair selector, negative-framed A/B UI, backend submit via `submitQuizResult`, Discover tab "Recommended for You" wired to `UserSession`
 - [x] Phase 2.8: Auth flow — sign-in/register SignInView + ProfileView, unblocks `POST /analysis` submission
 - [x] Phase 2.9: Result explainer — "Why this season?" card with axis bars + bulleted reasons
-- [ ] **Phase 3.0 (IN PROGRESS): Stage 3 tiebreaker** — final A/B between top vs runner-up, 2× weight, positive-framed
-- [ ] Phase 3.1: Weight calibration + extensive end-to-end testing (user deferred until after build-out)
-- [ ] Phase 3.2: Additional Stage 1 questions (eye color, natural hair color, freckles, flush) — highest-info-gain additions
-- [ ] Phase 3.3: UX polish (retake selfie mid-flow, adaptive pair count, sharing)
-- [ ] Phase 3.4: Pipeline accuracy improvements (hair/eye sampling, white balance, median, exposure)
-- [ ] Phase 4: Influencer matching + lip combos — activate combo cards using user's saved season
-- [ ] Phase 5: Monetization + paywall (StoreKit 2)
-- [ ] Phase 6: Polish + launch
+- [x] Phase 3.0: Stage 3 tiebreaker — final A/B between top vs runner-up, 2× weight, positive-framed, "Final Call" badge in DrapingPairView, routed from QuestionnaireHostView
+- [x] Phase 3.2: Additional Stage 1 questions — eye color, natural hair color, freckles, natural flush, contrast (5 questions added); back button to undo answers; "Not sure" on whites question
+- [ ] **Phase 3.1 (NEXT): Calibration pass** — on-device testing with known seasons, Stage 2 weight tuning (Sydney's test showed Stage 2 hurts accuracy)
+- [ ] Phase 3.3: Discover tab rework — Recommended vs. Discover All split, popularity sorting, all-blush browse, brand + palette filters (Sydney explicit feedback)
+- [ ] Phase 3.4: Influencer combo cards — lip combos in InfluencerDetailView with premium gate
+- [ ] Phase 3.5: Result sharing — `ImageRenderer` share card from FinalResultView
+- [ ] Phase 5: Monetization + paywall (StoreKit 2) — triggered by locked combo content
+- [ ] Phase 6: UX polish + launch (retake selfie mid-flow, adaptive pair count, celebrity look-alike stretch goal)
 
 ## Step-by-Step Plan (current working list)
 
-1. **Finish Stage 3 tiebreaker** (in progress)
-   - [x] `DrapingPair.isTiebreaker` flag + `TopSeasonTiebreakerBuilder`
-   - [x] `.tiebreaker` phase in `DrapingViewModel.Phase`
-   - [x] `moveToTiebreakerOrFinish()` transition + 2× weight on pick
-   - [x] `currentPair` / `currentIndex` / `totalPairCount` updated to include tiebreaker
-   - [ ] `DrapingPairView` "Final call" badge when `pair.isTiebreaker`
-   - [ ] `QuestionnaireHostView` routes `.tiebreaker` phase to pair view
-   - [ ] Build + simulator smoke test
-2. **Commit Stage 3**, then move into calibration/testing pass
-3. **Tune confidence ceilings** — bump Stage 2 weights so perfect-aligned run breaches 75-85% (user earlier asked about this; deferred intentionally until after full flow exists)
-4. **Add 4 more Stage 1 questions** — eye color, natural hair color, freckles, natural flush (highest info-gain additions)
-5. **Extensive testing pass + tweaks** (user plan: "test extensively after we've finished, then make tweaks")
-6. Move on to Phase 4: influencer combo browsing driven by saved season
+### Phase 3.1 — Calibration pass (NEXT)
+Sydney tested end-to-end (2026-04-21) and found Stage 2 lowers accuracy even when the user answers truthfully. Confidence stays high, which means the scorer is overconfident on the wrong season. Root cause is likely the Stage 2 shade weights adding noise rather than signal. Must fix before building anything that depends on the season result.
+- [ ] Run quiz on **device** (not simulator) with 3–5 known seasons including Sydney (True Winter)
+- [ ] Log posterior after each Stage 1 answer, after each Stage 2 pick, and final result
+- [ ] Compare Stage 1-only result vs. Stage 2 result — quantify how much Stage 2 shifts the posterior
+- [ ] If Stage 2 consistently shifts away from correct season: reduce Stage 2 shade weights (currently 1.55–1.9) or reduce pair count
+- [ ] Verify contrast question integrates cleanly (chromaVivid/chromaMuted axes)
+- [ ] Tune early-stop threshold if needed (currently 0.55 for Stage 1, 0.70 for tiebreaker skip)
+
+**Key files:** `Stage1Questions.swift`, `DrapingPairSelector.swift`, `DrapingViewModel.swift`, `QuestionnaireScorer.swift`, `DrapingShade.swift`
+
+### Phase 3.3 — Discover tab rework
+Sydney called this out explicitly with screenshots. Currently the tab only shows season-matched products. She wants two modes: (1) Recommended — full tab of season-matched products, and (2) Discover All — all products browseable by popularity/metric, filterable by brand and color palette (not just season).
+- [ ] Promote "Recommended for You" carousel to a full segmented or tabbed section
+- [ ] Add "Discover All" mode: default sort by some popularity/metric, all categories
+- [ ] Add color palette filter (by season family: spring/summer/autumn/winter) as a third filter row
+- [ ] Backend already supports `GET /products` with category/brand — add season family group filter
+
+**Key files:** `ProductListView.swift`, `ProductListViewModel.swift`, `ProductRepository.swift`, `Endpoints.swift`
+
+### Phase 3.4 — Influencer combo cards
+Core value prop from day 1. Backend has 24 combos / 68 combo items. `GET /combos/influencer/{id}` is PREMIUM-gated.
+- [ ] Add "Lip Combos" section to `InfluencerDetailView` below social links
+- [ ] Each combo card: liner + lipstick + gloss swatches with product names + hex dots
+- [ ] Premium gate: blur/lock icon if not subscribed; tapping opens paywall sheet
+- [ ] Add `LipCombo` / `LipComboItem` DTOs if not already in Domain/DTOs
+
+**Key files:** `InfluencerDetailView.swift`, `InfluencerRepository.swift`, `Domain/DTOs/`
+
+### Phase 3.5 — Result sharing
+Quick win with viral potential. Export FinalResultView as a shareable image card.
+- [ ] Add Share button to `FinalResultView`
+- [ ] Use `ImageRenderer` to rasterize a card view (season name, top shade, Blanch watermark)
+- [ ] Present `ShareLink` or `UIActivityViewController`
+
+**Key files:** `FinalResultView.swift`
+
+### Phase 5 — Monetization (StoreKit 2)
+- [ ] `SubscriptionManager.swift` — StoreKit 2 purchase flow, receipt verification via `POST /subscriptions/verify`
+- [ ] `PaywallView.swift` — presented as sheet from locked combo content
+- [ ] Wire `GET /subscriptions/status` to gate combo display in `InfluencerDetailView`
+
+### Phase 6 — Polish + launch
+- [ ] Retake selfie mid-flow (currently requires full restart)
+- [ ] Adaptive pair count (fewer pairs if leader already dominant post-Stage-1)
+- [ ] Celebrity look-alike section (stretch goal from Sydney)
+- [ ] CV pipeline deprioritized — quiz-first approach confirmed
 
 ## Next Steps
-1. Finish the Stage 3 tiebreaker wiring (DrapingPairView badge + HostView routing + build verification)
-2. Commit and run an end-to-end smoke test
-3. Begin calibration pass (weight tuning, confidence thresholds, pair count tuning)
-4. Add eye/hair/freckles/flush Stage 1 questions
+1. Run calibration pass on device — log posteriors, identify where Stage 2 adds noise
+2. Fix Stage 2 weights based on findings, re-test
+3. Move to Discover tab rework once quiz accuracy is confirmed
 
 ## Future Goals (Backlog)
 - Custom Sephora/Ulta product scraper for premium brand data with accurate hex codes (scaffold at `pipeline/scrapers/`)

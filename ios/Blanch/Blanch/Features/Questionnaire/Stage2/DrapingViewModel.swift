@@ -33,6 +33,8 @@ final class DrapingViewModel: BaseViewModel {
     @Published private(set) var submitError: String?
     @Published private(set) var isSubmitted: Bool = false
 
+    private var posteriorHistory: [[String: Double]] = []
+
     let posterior: SharedPosterior
     private let lipDetector: LipRegionDetecting
     private let renderer: LipRendering
@@ -47,11 +49,10 @@ final class DrapingViewModel: BaseViewModel {
     // decisively break ambiguous top-2 situations.
     private let tiebreakerWeightFactor = 2
 
-    // Target number of A/B pairs to present. 4 is the sweet spot between
-    // information gain and user fatigue — each pair carries ~1.8/0.55 weights,
-    // so 4 pairs can push top-season confidence from ~25% (end of Stage 1)
-    // into the 70%+ range.
-    private let targetPairCount = 4
+    // Target number of A/B pairs to present. Reduced from 4 → 3 for the
+    // calibration pass: fewer pairs means less cumulative noise while we
+    // verify the Stage 2 weights are directionally correct.
+    private let targetPairCount = 3
 
     // Stop early once the leading season dominates clearly.
     private let earlyStopThreshold: Double = 0.70
@@ -87,9 +88,10 @@ final class DrapingViewModel: BaseViewModel {
         pickedShadeIds = []
 
         do {
-            try await prepareShades(image: image)
+            let catalog = activeCatalog
+            try await prepareShades(image: image, catalog: catalog)
             let selected = pairSelector.selectPairs(
-                from: DrapingShadeCatalog.all,
+                from: catalog,
                 posterior: posterior.value,
                 palettes: posterior.palettes,
                 count: targetPairCount
@@ -113,17 +115,21 @@ final class DrapingViewModel: BaseViewModel {
         isLoading = false
     }
 
-    // Detect lips once, then render every catalog shade up-front so the
+    // The shade catalog to use for this session. Uses the 4 family-specific
+    // shades when a family has been identified (Phase 3.6), otherwise all 8.
+    private var activeCatalog: [DrapingShade] {
+        if let family = posterior.identifiedFamily {
+            return DrapingShadeCatalog.shades(for: family)
+        }
+        return DrapingShadeCatalog.all
+    }
+
+    // Detect lips once, then render the active catalog shades up-front so
     // A/B transitions are instant (no render latency per pair).
     //
-    // CRITICAL: normalize orientation first. iPhone photos typically carry
-    // EXIF orientation metadata (e.g. .right for portrait camera shots).
-    // Vision with `orientation: .up` interprets the raw pixel data — if we
-    // hand it un-normalized, it detects a sideways face and the bbox is in
-    // the sideways frame, so the rendered "lipstick" lands on the forehead
-    // when the UIImage's orientation metadata rotates the output back.
-    // AnalysisPipeline does the same thing (see AnalysisPipeline.swift:69).
-    private func prepareShades(image: UIImage) async throws {
+    // CRITICAL: normalize orientation first. iPhone photos carry EXIF metadata;
+    // Vision with .up orientation reads raw pixels — un-normalized = sideways face.
+    private func prepareShades(image: UIImage, catalog: [DrapingShade]) async throws {
         guard let normalized = image.normalizedToUp(),
               let cgImage = normalized.cgImage else {
             throw LipRendererError.invalidImage
@@ -133,11 +139,8 @@ final class DrapingViewModel: BaseViewModel {
         let region = try await lipDetector.detectLipRegion(in: cgImage, pixelSize: size)
         usedHeuristicLipRegion = !region.isPrecise
 
-        // Render against the NORMALIZED image so the mask coordinates line
-        // up with the pixel grid Vision saw. The result UIImage then has
-        // .up orientation too, so SwiftUI displays it without rotation.
         var rendered: [String: UIImage] = [:]
-        for shade in DrapingShadeCatalog.all {
+        for shade in catalog {
             let image = try await renderer.render(
                 image: normalized,
                 lipPolygon: region.polygon,
@@ -151,7 +154,7 @@ final class DrapingViewModel: BaseViewModel {
     // MARK: - Answering
 
     func pick(shade: DrapingShade, rejected: DrapingShade) {
-        _ = rejected
+        posteriorHistory.append(posterior.value)
         pickedShadeIds.append(shade.id)
 
         // Tiebreaker uses positive framing ("which feels more like you?"),
@@ -159,7 +162,8 @@ final class DrapingViewModel: BaseViewModel {
         // framing ("which makes you look tired?") and the ViewModel already
         // receives the computed winner from the view. Either way, apply
         // the winner's likelihood to the posterior.
-        let repeats = (phase == .tiebreaker) ? tiebreakerWeightFactor : 1
+        let isTiebreaker = (phase == .tiebreaker)
+        let repeats = isTiebreaker ? tiebreakerWeightFactor : 1
         for _ in 0..<repeats {
             posterior.value = scorer.update(
                 posterior: posterior.value,
@@ -167,7 +171,38 @@ final class DrapingViewModel: BaseViewModel {
                 palettes: posterior.palettes
             )
         }
+        let stageLabel = isTiebreaker ? "Stage3-Tiebreaker" : "Stage2-Pair\(pickedShadeIds.count)"
+        logPosterior(stage: stageLabel, winner: shade.id, loser: rejected.id)
         advance()
+    }
+
+    var canGoBack: Bool {
+        switch phase {
+        case .pairing(let index): return index > 0
+        case .tiebreaker: return true
+        default: return false
+        }
+    }
+
+    func goBack() {
+        guard canGoBack, !posteriorHistory.isEmpty else { return }
+        posterior.value = posteriorHistory.removeLast()
+        pickedShadeIds.removeLast()
+
+        if phase == .tiebreaker {
+            phase = .pairing(index: pairs.count - 1)
+        } else if case .pairing(let index) = phase, index > 0 {
+            phase = .pairing(index: index - 1)
+        }
+    }
+
+    private func logPosterior(stage: String, winner: String, loser: String) {
+#if DEBUG
+        let top5 = posterior.value.rankedSeasons.prefix(5)
+            .map { String(format: "%@ %.1f%%", $0.name, $0.probability * 100) }
+            .joined(separator: " | ")
+        print("[Blanch \(stage)] won=\(winner) lost=\(loser) → \(top5)")
+#endif
     }
 
     private func advance() {
@@ -194,7 +229,7 @@ final class DrapingViewModel: BaseViewModel {
             return
         }
         if let pair = tiebreakerBuilder.buildTiebreaker(
-            from: DrapingShadeCatalog.all,
+            from: activeCatalog,
             posterior: posterior.value,
             palettes: posterior.palettes
         ) {
@@ -283,6 +318,7 @@ final class DrapingViewModel: BaseViewModel {
         pairs = []
         renderedImages = [:]
         pickedShadeIds = []
+        posteriorHistory = []
         errorMessage = nil
         submitError = nil
         isSubmitted = false

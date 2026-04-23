@@ -24,6 +24,25 @@ struct DrapingPairView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                if viewModel.canGoBack {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewModel.goBack()
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                                .font(.footnote.weight(.semibold))
+                            Text("Back")
+                                .font(.body)
+                        }
+                        .foregroundStyle(Color.warmBrown)
+                    }
+                }
+            }
+        }
     }
 
     private var progressHeader: some View {

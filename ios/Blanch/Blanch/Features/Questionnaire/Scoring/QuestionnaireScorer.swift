@@ -6,11 +6,25 @@ import Foundation
 // Separate from SeasonClassificationStrategy (which takes LAB from CV)
 // because this takes a stream of AnswerLikelihoods from user taps.
 // Different input, same output shape: a distribution over 12 seasons.
-// A later hybrid strategy can multiply the two posteriors together.
+//
+// Phase 3.6 adds updateFamilyPhase (chroma-blind, all 12 seasons) and the
+// standard update is used for variant-phase answers (chroma-aware, but only
+// the 3 collapsed seasons are in the posterior, so signal-to-noise triples).
 
 protocol QuestionnaireScoring: Sendable {
     func initialPosterior(palettes: [SeasonPalette]) -> [String: Double]
+
+    // Standard update — applies all axes including chroma.
+    // Used for Stage 2 draping and variant-phase quiz answers.
     func update(
+        posterior: [String: Double],
+        with likelihood: AnswerLikelihood,
+        palettes: [SeasonPalette]
+    ) -> [String: Double]
+
+    // Family-phase update — strips chroma signals to avoid leaking
+    // within-family chroma bias into cross-family undertone/depth questions.
+    func updateFamilyPhase(
         posterior: [String: Double],
         with likelihood: AnswerLikelihood,
         palettes: [SeasonPalette]
@@ -33,13 +47,43 @@ struct BayesianSeasonScorer: QuestionnaireScoring {
         var updated: [String: Double] = [:]
         for palette in palettes {
             let prior = posterior[palette.name] ?? 0
+            guard prior > 0 else { continue }
             let weight = likelihoodWeight(for: palette, likelihood: likelihood)
             updated[palette.name] = prior * weight
+        }
+        // Also carry through any season entries not in palettes
+        // (occurs in variant phase when posterior is collapsed to 3 seasons
+        //  and palettes still contains all 12).
+        for (name, value) in posterior where updated[name] == nil {
+            // If no palette found for this season, keep its value unchanged
+            // so it participates in normalisation.
+            if !palettes.contains(where: { $0.name == name }) {
+                updated[name] = value
+            }
         }
         return normalized(updated)
     }
 
-    // Maps per-answer axis likelihoods onto a specific season's (undertone, category, chroma).
+    func updateFamilyPhase(
+        posterior: [String: Double],
+        with likelihood: AnswerLikelihood,
+        palettes: [SeasonPalette]
+    ) -> [String: Double] {
+        // Strip chroma before applying — chroma is a within-family discriminator
+        // and must not contaminate cross-family undertone/depth questions.
+        let chromaBlind = AnswerLikelihood(
+            undertoneWarm: likelihood.undertoneWarm,
+            undertoneCool: likelihood.undertoneCool,
+            depthLight: likelihood.depthLight,
+            depthDeep: likelihood.depthDeep,
+            chromaVivid: 1.0,
+            chromaMuted: 1.0
+        )
+        return update(posterior: posterior, with: chromaBlind, palettes: palettes)
+    }
+
+    // MARK: - Weight calculation
+
     private func likelihoodWeight(for palette: SeasonPalette, likelihood: AnswerLikelihood) -> Double {
         let undertone = palette.undertone == "warm" ? likelihood.undertoneWarm : likelihood.undertoneCool
         let depth = depthWeight(category: palette.category, likelihood: likelihood)
@@ -47,7 +91,6 @@ struct BayesianSeasonScorer: QuestionnaireScoring {
         return undertone * depth * chroma
     }
 
-    // Category → light/deep axis. Neutral for summer/autumn (middle buckets).
     private func depthWeight(category: String, likelihood: AnswerLikelihood) -> Double {
         switch category {
         case "spring": return likelihood.depthLight
@@ -58,41 +101,42 @@ struct BayesianSeasonScorer: QuestionnaireScoring {
         }
     }
 
-    // Season-name → chroma/clarity axis. Bright/True seasons favor vivid;
-    // Soft/Light seasons favor muted. Fractions below are the signal strength
-    // each variant carries on the chroma axis — Bright carries the full signal,
-    // True carries 60%, Light/Soft carry mixed or full muted signal, etc.
+    // Chroma/clarity axis weights per season variant.
     // v = chromaVivid deviation from 1.0; m = chromaMuted deviation from 1.0.
+    //
+    // Phase 3.6 calibration:
+    //   Light Spring   — bumped muted signal (0.15→0.55) to separate from True Spring
+    //   Light Summer   — adjusted to be slightly more vivid-tolerant than True/Soft Summer
+    //   Dark Autumn    — slightly more vivid than Soft Autumn (deep jewel tones)
     private func chromaWeight(name: String, likelihood: AnswerLikelihood) -> Double {
         let v = likelihood.chromaVivid - 1.0
         let m = likelihood.chromaMuted - 1.0
         switch name {
-        // Fully vivid: Bright seasons look best in the clearest, most saturated colors.
+        // Fully vivid: best in maximum saturation
         case "Bright Winter", "Bright Spring":
             return 1.0 + v * 1.0
-        // Moderately vivid: True seasons prefer clear colors but not extreme saturation.
+        // Moderately vivid: clear but not neon
         case "True Winter", "True Spring":
-            return 1.0 + v * 0.6
-        // Deep Winter: vivid but primarily driven by depth; mild chroma signal.
+            return 1.0 + v * 0.75
+        // Deep Winter: depth-driven; mild chroma signal
         case "Deep Winter":
             return 1.0 + v * 0.15 + m * 0.1
-        // Light Spring: light and clear, but not as vivid as True/Bright Spring.
+        // Light Spring: soft, powdery warm pastels — penalised by vivid, boosted by muted
         case "Light Spring":
-            return 1.0 + v * 0.25 + m * 0.15
-        // Light Summer: cool and light; moderately muted.
+            return 1.0 + v * 0.12 + m * 0.55
+        // Light Summer: airy cool — slightly more vivid-tolerant than True/Soft Summer
         case "Light Summer":
-            return 1.0 + m * 0.35 + v * 0.1
-        // True Summer: clearly muted, grayed palette — stronger muted signal than Autumn.
+            return 1.0 + m * 0.4 + v * 0.22
+        // True Summer: clearly muted, grayed palette
         case "True Summer":
             return 1.0 + m * 0.6
-        // True Autumn: medium saturation — can wear earthy-vivid (orange-red, burnt sienna)
-        // but not as muted as Soft Autumn. Separated from True Summer intentionally.
+        // True Autumn: medium saturation earthy — neither fully muted nor vivid
         case "True Autumn":
-            return 1.0 + m * 0.3 + v * 0.15
-        // Dark Autumn: deep and muted; slight depth-muted lean over vivid.
+            return 1.0 + m * 0.3 + v * 0.2
+        // Dark Autumn: deep and somewhat vivid — jewel-toned earthy; more vivid than Soft
         case "Dark Autumn":
-            return 1.0 + m * 0.35 + v * 0.1
-        // Fully muted: Soft seasons always look best in grayed, toned-down colors.
+            return 1.0 + m * 0.2 + v * 0.28
+        // Fully muted: best in grayed, toned-down colors
         case "Soft Summer", "Soft Autumn":
             return 1.0 + m * 1.0
         default:

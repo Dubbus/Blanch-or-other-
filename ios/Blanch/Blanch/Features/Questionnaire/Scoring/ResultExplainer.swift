@@ -51,8 +51,10 @@ struct ResultExplainer: ResultExplaining {
         var depthLog = 0.0
         var reasons: [ExplainerReason] = []
 
-        // Stage 1 — one reason per answered question, interpreted into plain text.
-        for question in Stage1Questions.all {
+        // Stage 1 — one reason per answered question across both phases.
+        let allStage1 = Stage1Questions.familyPhaseQuestions
+            + SeasonFamily.allCases.flatMap { Stage1Questions.variantPhaseQuestions(for: $0) }
+        for question in allStage1 {
             guard let answerId = selectedAnswerIds[question.id],
                   let answer = question.options.first(where: { $0.id == answerId }) else {
                 continue

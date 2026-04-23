@@ -3,17 +3,19 @@ import Combine
 
 // MARK: - Shared Posterior
 //
-// A tiny reference type that holds the running posterior over seasons
-// so Stage 1 and Stage 2 can mutate the same distribution. Without this,
-// we'd be threading a `@Binding` through view-model boundaries, which
-// SwiftUI supports poorly for compound mutations.
-//
-// Also stores the loaded palettes — both stages need them.
+// Reference type holding the running posterior over seasons so Stage 1 and
+// Stage 2 can mutate the same distribution across view-model boundaries.
+// Also stores the loaded palettes and — after Phase 3.6 — the identified
+// season family so Stage 2 can restrict its shade catalog to the family.
 
 @MainActor
 final class SharedPosterior: ObservableObject {
     @Published var value: [String: Double] = [:]
     @Published var palettes: [SeasonPalette] = []
+
+    // Set by QuestionnaireViewModel when the family phase reaches ≥ 65%
+    // confidence on one family. Stage 2 reads this to pick its shade catalog.
+    @Published var identifiedFamily: SeasonFamily? = nil
 
     init(value: [String: Double] = [:], palettes: [SeasonPalette] = []) {
         self.value = value

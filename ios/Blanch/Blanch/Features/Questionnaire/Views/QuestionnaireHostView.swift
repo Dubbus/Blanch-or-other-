@@ -2,11 +2,12 @@ import SwiftUI
 
 // MARK: - Questionnaire Host View
 //
-// Orchestrates the full quiz flow: Stage 1 (factual questions) →
-// Stage 2 (draping A/B on user's selfie) → combined result.
+// Orchestrates the full quiz flow:
+//   Stage 1 family questions → family reveal card → Stage 1 variant questions
+//   → preliminary result → Stage 2 draping → final result
 //
-// Owns both Stage 1 and Stage 2 ViewModels plus the SharedPosterior
-// they both mutate. Routes based on `stage` state.
+// Phase 3.6: added .familyReveal stage that fires when QuestionnaireViewModel
+// transitions from .family to .variant phase.
 
 struct QuestionnaireHostView: View {
     @StateObject var shared: SharedPosterior
@@ -15,8 +16,9 @@ struct QuestionnaireHostView: View {
 
     @State private var stage: Stage = .stage1
 
-    enum Stage {
+    enum Stage: Equatable {
         case stage1
+        case familyReveal(SeasonFamily)  // brief transition card between phases
         case stage1Result
         case stage2
         case finalResult
@@ -28,6 +30,10 @@ struct QuestionnaireHostView: View {
                 switch stage {
                 case .stage1:
                     stage1Screen
+                case .familyReveal(let family):
+                    FamilyRevealCard(family: family) {
+                        stage = .stage1
+                    }
                 case .stage1Result:
                     QuestionnaireResultView(
                         viewModel: stage1VM,
@@ -60,6 +66,12 @@ struct QuestionnaireHostView: View {
         .task {
             if !stage1VM.hasLoaded { await stage1VM.loadData() }
         }
+        .onChange(of: stage1VM.quizPhase) { old, new in
+            // Fire the reveal card as soon as the VM transitions to variant phase.
+            if case .variant(let family) = new, old == .family, stage == .stage1 {
+                stage = .familyReveal(family)
+            }
+        }
         .onChange(of: stage1VM.isFinished) { _, finished in
             if finished, stage == .stage1 { stage = .stage1Result }
         }
@@ -78,9 +90,10 @@ struct QuestionnaireHostView: View {
 
     private var title: String {
         switch stage {
-        case .stage1, .stage1Result: return "Color Quiz"
-        case .stage2: return "Draping"
-        case .finalResult: return "Your Result"
+        case .stage1, .familyReveal: return "Color Quiz"
+        case .stage1Result:          return "Color Quiz"
+        case .stage2:                return "Draping"
+        case .finalResult:           return "Your Result"
         }
     }
 
@@ -117,7 +130,6 @@ struct QuestionnaireHostView: View {
                 ProgressView().controlSize(.large)
             }
         case .finished:
-            // Auto-transition is handled by onChange; show loader briefly.
             ProgressView().controlSize(.large)
         }
     }
@@ -137,8 +149,60 @@ struct QuestionnaireHostView: View {
     }
 }
 
+// MARK: - Family Reveal Card
+
+private struct FamilyRevealCard: View {
+    let family: SeasonFamily
+    let onContinue: () -> Void
+
+    @State private var appeared = false
+
+    var body: some View {
+        VStack(spacing: 32) {
+            Spacer()
+
+            VStack(spacing: 16) {
+                Text("You're reading as a")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+
+                Text(family.displayName)
+                    .font(.system(size: 52, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.warmBrown)
+
+                Text(family.revealTagline)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+            }
+            .opacity(appeared ? 1 : 0)
+            .offset(y: appeared ? 0 : 20)
+
+            Spacer()
+
+            Button(action: onContinue) {
+                Text("Continue")
+                    .font(.body.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Color.warmBrown)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            }
+            .padding(.horizontal, 24)
+            .opacity(appeared ? 1 : 0)
+            .padding(.bottom, 32)
+        }
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.45)) {
+                appeared = true
+            }
+        }
+    }
+}
+
 // MARK: - Stage 1 single-question screen
-// Extracted from the old QuestionnaireView so the host can embed it.
 
 private struct Stage1QuestionView: View {
     @ObservedObject var viewModel: QuestionnaireViewModel
@@ -147,6 +211,7 @@ private struct Stage1QuestionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             progressBar
+            phaseLabel
             VStack(alignment: .leading, spacing: 10) {
                 Text("Question \(viewModel.currentIndex + 1) of \(viewModel.questions.count)")
                     .font(.footnote.weight(.semibold))
@@ -177,6 +242,44 @@ private struct Stage1QuestionView: View {
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                if viewModel.canGoBack {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewModel.goBack()
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                                .font(.footnote.weight(.semibold))
+                            Text("Back")
+                                .font(.body)
+                        }
+                        .foregroundStyle(Color.warmBrown)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var phaseLabel: some View {
+        if case .variant(let family) = viewModel.quizPhase {
+            HStack(spacing: 6) {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(Color.warmBrown)
+                Text("\(family.displayName) identified — fine-tuning")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.warmBrown)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(
+                Capsule()
+                    .fill(Color.warmBrown.opacity(0.1))
+            )
+        }
     }
 
     private func optionCard(_ option: QuizAnswer) -> some View {

@@ -324,8 +324,9 @@ open -a Simulator
 - [x] Phase 2.9: Result explainer — "Why this season?" card with axis bars + bulleted reasons
 - [x] Phase 3.0: Stage 3 tiebreaker — final A/B between top vs runner-up, 2× weight, positive-framed, "Final Call" badge in DrapingPairView, routed from QuestionnaireHostView
 - [x] Phase 3.2: Additional Stage 1 questions — eye color, natural hair color, freckles, natural flush, contrast (5 questions added); back button to undo answers; "Not sure" on whites question
-- [ ] **Phase 3.1 (NEXT): Calibration pass** — on-device testing with known seasons, Stage 2 weight tuning (Sydney's test showed Stage 2 hurts accuracy)
-- [ ] Phase 3.3: Discover tab rework — Recommended vs. Discover All split, popularity sorting, all-blush browse, brand + palette filters (Sydney explicit feedback)
+- [x] Phase 3.1: Calibration pass (stabilization) — `#if DEBUG` posterior logging, Stage 2 shade weights reduced to 70% of deviation (0.65–1.63 range), pair count 4→3, neon tolerance question added (Bright vs True Winter discriminator), True Winter chromaVivid coefficient 0.6→0.75, "always burns" depth penalty softened (depthDeep 0.8→0.9), back button added to draping phase; root-cause (flat posterior over hierarchical season space) staged as Phase 3.6
+- [x] Phase 3.6: Two-phase quiz restructure — SeasonFamily enum, family/variant phase split in QuestionnaireViewModel, chroma-blind family scoring, collapsed posterior, family reveal card, family-specific 4-shade Stage 2 catalog, variant questions for all 4 season families
+- [ ] **Phase 3.3 (NEXT): Discover tab rework** — Recommended vs. Discover All split, popularity sorting, all-blush browse, brand + palette filters (Sydney explicit feedback) — Recommended vs. Discover All split, popularity sorting, all-blush browse, brand + palette filters (Sydney explicit feedback)
 - [ ] Phase 3.4: Influencer combo cards — lip combos in InfluencerDetailView with premium gate
 - [ ] Phase 3.5: Result sharing — `ImageRenderer` share card from FinalResultView
 - [ ] Phase 5: Monetization + paywall (StoreKit 2) — triggered by locked combo content
@@ -333,16 +334,52 @@ open -a Simulator
 
 ## Step-by-Step Plan (current working list)
 
-### Phase 3.1 — Calibration pass (NEXT)
-Sydney tested end-to-end (2026-04-21) and found Stage 2 lowers accuracy even when the user answers truthfully. Confidence stays high, which means the scorer is overconfident on the wrong season. Root cause is likely the Stage 2 shade weights adding noise rather than signal. Must fix before building anything that depends on the season result.
-- [ ] Run quiz on **device** (not simulator) with 3–5 known seasons including Sydney (True Winter)
-- [ ] Log posterior after each Stage 1 answer, after each Stage 2 pick, and final result
-- [ ] Compare Stage 1-only result vs. Stage 2 result — quantify how much Stage 2 shifts the posterior
-- [ ] If Stage 2 consistently shifts away from correct season: reduce Stage 2 shade weights (currently 1.55–1.9) or reduce pair count
-- [ ] Verify contrast question integrates cleanly (chromaVivid/chromaMuted axes)
-- [ ] Tune early-stop threshold if needed (currently 0.55 for Stage 1, 0.70 for tiebreaker skip)
+### Phase 3.6 — Two-phase quiz restructure (NEXT)
 
-**Key files:** `Stage1Questions.swift`, `DrapingPairSelector.swift`, `DrapingViewModel.swift`, `QuestionnaireScorer.swift`, `DrapingShade.swift`
+**Root cause diagnosed (2026-04-22):** The current quiz runs a flat Bayesian posterior over all 12 seasons simultaneously. Bright Winter and True Winter share undertone, depth, and every axis except chroma magnitude — so within-family variant discrimination competes against cross-family disambiguation for the same signal budget. Any positive vivid evidence boosts Bright Winter more than True Winter by design (1.0 vs 0.75 coefficient), and a True Winter gives the same cross-family answers as a Bright Winter, so the system has no way to route them correctly from cross-family questions alone. Weight tuning can narrow the gap but can't solve it structurally.
+
+**Fix: split the quiz into two sequential phases with a family gate between them.**
+
+#### Phase A — Family call (cross-family questions only)
+Run undertone + depth questions against all 12 seasons until one season *family* (Spring / Summer / Autumn / Winter) reaches ≥ 65% posterior mass. Questions in this phase should only probe axes that distinguish families — undertone (warm/cool) and depth (light/deep). No chroma/variant questions here.
+
+Questions assigned to Phase A: `vein_color`, `jewelry`, `sun_behavior`, `whites`, `eye_color`, `hair_color`, `freckles`, `natural_flush`
+
+#### Phase B — Variant discrimination (within-family questions only)
+Once the family is identified, collapse the posterior to the 3 variants within that family and run family-specific variant questions. Each answer now updates only 3 seasons instead of 12, so the signal-to-noise ratio triples.
+
+Variant questions per family:
+- **Winter**: `contrast`, `neon_tolerance` → discriminates Bright / True / Deep Winter
+- **Summer**: `contrast`, a new "softness" question (dusty vs clean cool) → discriminates Soft / Light / True Summer
+- **Spring**: `contrast`, a new "clarity" question (vivid vs warm-light) → discriminates Bright / True / Light Spring
+- **Autumn**: `contrast`, a new "depth" question (rich-dark vs soft-muted vs true-earthy) → discriminates Dark / Soft / True Autumn
+
+Stage 2 lip draping: show only the 4 shades representing the identified family (2 warm/cool variants + depth split within family) instead of all 8 spanning all families.
+
+#### Implementation steps
+
+- [ ] **`SeasonFamily.swift`** — new enum (`spring`, `summer`, `autumn`, `winter`), plus:
+  - `func dominantFamily(from posterior: [String: Double]) -> SeasonFamily?` — returns family if it has ≥ 65% mass
+  - `func seasons(in family: SeasonFamily) -> [String]` — maps family to its 3 variant names
+  - `func collapse(posterior: [String: Double], to family: SeasonFamily) -> [String: Double]` — renormalize posterior over the 3 variants of the identified family
+
+- [ ] **`Stage1Questions.swift` refactor** — split `all` into:
+  - `familyPhaseQuestions: [QuizQuestion]` — the 8 cross-family questions listed above (no chroma signals)
+  - `variantPhaseQuestions(for family: SeasonFamily) -> [QuizQuestion]` — returns the 2–3 variant questions for the given family; these are the only place `chromaVivid`/`chromaMuted` signals live
+
+- [ ] **`QuestionnaireViewModel` refactor** — add `quizPhase: QuizPhase` enum (`.family` / `.variant(SeasonFamily)`):
+  - After each `answer()`, check `SeasonFamily.dominantFamily(from: posterior.value)` — if non-nil and ≥ 65%, call `posterior.collapseToFamily()` and switch to `.variant(family)`
+  - Expose `identifiedFamily: SeasonFamily?` so the result views can say "we identified you as a Winter early and tuned the rest of the quiz to you"
+
+- [ ] **`QuestionnaireHostView` update** — add a brief transition card between family and variant phases: "You're reading as a **Winter** — let's narrow it down." (1 screen, auto-advances after 1.5s or on tap). This gives the user signal that the quiz is adapting.
+
+- [ ] **`DrapingShadeCatalog` refactor** — add `shades(for family: SeasonFamily) -> [DrapingShade]` that returns the 4 most discriminating shades for that family instead of all 8. Example Winter shades: `blue_red` (Bright/True Winter), `cool_berry` (Deep/True Winter), `cool_mauve` (True/Soft Winter boundary), `pink_rose` (Light/True Winter). This halves the Stage 2 shade space and doubles information gain per pair.
+
+- [ ] **`BayesianSeasonScorer` addition** — add `update(posterior:with:seasons:)` overload that only updates a given slice of season names (the 3 in the identified family), ignoring the rest. Called for all Phase B answers.
+
+- [ ] **`QuestionnaireScorer.swift`** — move `chromaVivid`/`chromaMuted` chroma axis out of cross-family weight calculation entirely; it should only apply when called from variant-phase updates.
+
+**Key files:** `Stage1Questions.swift`, `QuestionnaireViewModel.swift`, `QuestionnaireHostView.swift`, `QuestionnaireScorer.swift`, `DrapingShadeCatalog.swift`, `SharedPosterior.swift` + new `SeasonFamily.swift`
 
 ### Phase 3.3 — Discover tab rework
 Sydney called this out explicitly with screenshots. Currently the tab only shows season-matched products. She wants two modes: (1) Recommended — full tab of season-matched products, and (2) Discover All — all products browseable by popularity/metric, filterable by brand and color palette (not just season).
@@ -382,9 +419,8 @@ Quick win with viral potential. Export FinalResultView as a shareable image card
 - [ ] CV pipeline deprioritized — quiz-first approach confirmed
 
 ## Next Steps
-1. Run calibration pass on device — log posteriors, identify where Stage 2 adds noise
-2. Fix Stage 2 weights based on findings, re-test
-3. Move to Discover tab rework once quiz accuracy is confirmed
+1. On-device test with Sydney (True Winter) after Phase 3.6 — verify family gate fires at Winter, neon_tolerance then pushes True above Bright
+2. Implement Phase 3.3 Discover tab rework — Recommended vs. Discover All, palette filter, popularity sort
 
 ## Future Goals (Backlog)
 - Custom Sephora/Ulta product scraper for premium brand data with accurate hex codes (scaffold at `pipeline/scrapers/`)
@@ -397,3 +433,4 @@ Quick win with viral potential. Export FinalResultView as a shareable image card
 - Lip landmark preview on device before A/B (let user confirm the detected lip polygon looks right)
 - Manual lip-position nudge UI as a fallback if landmark detection fails
 - Result sharing — export the FinalResultView as an image card for social
+- Live contrast visualizer for the contrast question: activate the front camera inline and apply a real-time desaturate + high-contrast CoreImage filter (like TikTok's B&W effect) so the user can literally see their feature contrast in grayscale before answering. Replaces the abstract "imagine a black-and-white photo" instruction with a direct visual. Implementation: `AVCaptureSession` + `CIFilter` chain (desaturate → levels boost) rendered into a SwiftUI `VideoPreviewLayer` wrapper; present as an optional "See for yourself" sheet from the contrast question card.

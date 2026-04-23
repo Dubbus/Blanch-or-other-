@@ -2,13 +2,26 @@ import Foundation
 
 // MARK: - Stage 1 Factual Questions
 //
-// Four undertone/depth questions drawn from traditional color-analyst intake.
-// Likelihoods are deliberately mild (0.7–1.4) — each question is weak evidence,
-// the posterior firms up only after all four. This keeps any single mis-answer
-// from locking the user into the wrong season.
+// Phase 3.6 split: questions are now divided into two phases.
+//
+// Phase A — Family call: cross-family questions that probe undertone + depth.
+//   Chroma signals are intentionally stripped from these likelihoods (or
+//   ignored by the scorer) because all 12 seasons are in play and chroma
+//   is a within-family discriminator, not a cross-family one.
+//
+// Phase B — Variant discrimination: family-specific questions that probe
+//   the chroma/clarity/depth axis to distinguish the 3 variants within
+//   the identified family.
+//
+// Weights are intentionally mild in Phase A (0.65–1.5) — no single answer
+// can lock the user into the wrong family. Phase B weights are stronger
+// because the posterior is already collapsed to 3 seasons.
 
 enum Stage1Questions {
-    static let all: [QuizQuestion] = [
+
+    // MARK: - Phase A: Family questions (cross-family, chroma-blind)
+
+    static let familyPhaseQuestions: [QuizQuestion] = [
         veinColor,
         jewelry,
         sunBehavior,
@@ -19,8 +32,20 @@ enum Stage1Questions {
         naturalFlush
     ]
 
-    // Classic undertone tell. Blue/purple wrist veins correlate with cool
-    // undertones; green with warm. "Can't tell" is genuinely neutral.
+    // MARK: - Phase B: Variant questions (within-family, chroma-aware)
+
+    static func variantPhaseQuestions(for family: SeasonFamily) -> [QuizQuestion] {
+        switch family {
+        case .winter: return [contrast, neonTolerance]
+        case .spring: return [contrast, springClarity]
+        case .summer: return [contrast, summerSoftness]
+        case .autumn: return [contrast, autumnRichness]
+        }
+    }
+
+    // MARK: - Family Phase Questions
+
+    // Classic undertone tell. Blue/purple wrist veins → cool; green → warm.
     static let veinColor = QuizQuestion(
         id: "vein_color",
         prompt: "Look at the veins on the inside of your wrist in natural light.",
@@ -53,8 +78,7 @@ enum Stage1Questions {
         ]
     )
 
-    // Gut preference — not "what do you own," but which makes you feel
-    // more polished. Gold = warm, silver/platinum = cool.
+    // Gold = warm, silver/platinum = cool.
     static let jewelry = QuizQuestion(
         id: "jewelry",
         prompt: "Which metal makes your skin glow?",
@@ -87,8 +111,8 @@ enum Stage1Questions {
         ]
     )
 
-    // Sun behavior informs BOTH undertone and depth. Easy tanners skew
-    // warm and often deeper-seasoned; always-burners skew cool and lighter.
+    // Sun behavior informs undertone + depth. Easy tanners → warm + deeper;
+    // always-burners → cool + lighter.
     static let sunBehavior = QuizQuestion(
         id: "sun_behavior",
         prompt: "In the sun without SPF, your skin…",
@@ -107,18 +131,15 @@ enum Stage1Questions {
                 id: "burns_then_tans",
                 label: "Burns first, then tans",
                 detail: nil,
-                likelihood: AnswerLikelihood(
-                    undertoneWarm: 1.0, undertoneCool: 1.0,
-                    depthLight: 1.0, depthDeep: 1.0
-                )
+                likelihood: AnswerLikelihood()
             ),
             QuizAnswer(
                 id: "always_burns",
                 label: "Burns and stays burned",
                 detail: nil,
                 likelihood: AnswerLikelihood(
-                    undertoneWarm: 0.8, undertoneCool: 1.25,
-                    depthLight: 1.25, depthDeep: 0.8
+                    undertoneWarm: 0.85, undertoneCool: 1.2,
+                    depthLight: 1.15, depthDeep: 0.9
                 )
             ),
             QuizAnswer(
@@ -130,8 +151,9 @@ enum Stage1Questions {
         ]
     )
 
-    // Classic drape test for undertone. Pure optical white against a
-    // warm undertone reads harsh; cream/ivory against cool reads sallow.
+    // Classic drape test for undertone. Pure optical white → cool;
+    // cream/ivory → warm. Chroma signals intentionally omitted here —
+    // white contrast is a cross-family tell, not a within-family one.
     static let whites = QuizQuestion(
         id: "whites",
         prompt: "Which white shirt is more flattering against your face?",
@@ -141,33 +163,30 @@ enum Stage1Questions {
                 id: "pure_white",
                 label: "Crisp, optical white",
                 detail: "Clean and bright",
-                likelihood: AnswerLikelihood(
-                    undertoneWarm: 0.75, undertoneCool: 1.35,
-                    chromaVivid: 1.35, chromaMuted: 0.75
-                )
+                likelihood: AnswerLikelihood(undertoneWarm: 0.75, undertoneCool: 1.35)
             ),
             QuizAnswer(
                 id: "cream",
                 label: "Cream or ivory",
                 detail: "Softer, yellow-tinged",
-                likelihood: AnswerLikelihood(
-                    undertoneWarm: 1.35, undertoneCool: 0.75,
-                    chromaVivid: 0.75, chromaMuted: 1.35
-                )
+                likelihood: AnswerLikelihood(undertoneWarm: 1.35, undertoneCool: 0.75)
             ),
             QuizAnswer(
                 id: "both",
                 label: "Both look fine",
                 detail: nil,
                 likelihood: AnswerLikelihood()
+            ),
+            QuizAnswer(
+                id: "unsure_whites",
+                label: "Not sure — I've never compared",
+                detail: nil,
+                likelihood: AnswerLikelihood()
             )
         ]
     )
 
-    // Eye color is a strong undertone + depth signal. Blue/grey → cool;
-    // grey-steel → Summer cool muted; green → mild cool; hazel → warm Autumn;
-    // amber/honey brown → warm; dark brown/black → depth signal only
-    // (warm vs cool can't be read from dark eyes alone — undertone stays neutral).
+    // Eye color: strong undertone + depth signal.
     static let eyeColor = QuizQuestion(
         id: "eye_color",
         prompt: "What's your natural eye color in daylight?",
@@ -179,8 +198,7 @@ enum Stage1Questions {
                 detail: nil,
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.72, undertoneCool: 1.38,
-                    depthLight: 1.12, depthDeep: 0.9,
-                    chromaVivid: 1.15, chromaMuted: 0.95
+                    depthLight: 1.12, depthDeep: 0.9
                 )
             ),
             QuizAnswer(
@@ -188,8 +206,7 @@ enum Stage1Questions {
                 label: "Grey or steel",
                 detail: "Flat, muted grey — not blue-grey",
                 likelihood: AnswerLikelihood(
-                    undertoneWarm: 0.75, undertoneCool: 1.35,
-                    chromaVivid: 0.88, chromaMuted: 1.25
+                    undertoneWarm: 0.75, undertoneCool: 1.35
                 )
             ),
             QuizAnswer(
@@ -226,9 +243,6 @@ enum Stage1Questions {
     )
 
     // Hair color is the strongest single physical signal color analysts use.
-    // Warm vs cool split on dark hair is the key discriminator between
-    // Winter (blue-black) and Dark Autumn (warm dark brown).
-    // Weights are the strongest in Stage 1 to reflect this.
     static let hairColor = QuizQuestion(
         id: "hair_color",
         prompt: "Your natural hair color — before any coloring — is closest to:",
@@ -240,8 +254,7 @@ enum Stage1Questions {
                 detail: "Cool-toned, no golden or yellow",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.65, undertoneCool: 1.5,
-                    depthLight: 1.35, depthDeep: 0.7,
-                    chromaVivid: 0.85, chromaMuted: 1.2
+                    depthLight: 1.35, depthDeep: 0.7
                 )
             ),
             QuizAnswer(
@@ -250,8 +263,7 @@ enum Stage1Questions {
                 detail: "Warm, yellow or reddish cast",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.5, undertoneCool: 0.65,
-                    depthLight: 1.25, depthDeep: 0.8,
-                    chromaVivid: 1.2, chromaMuted: 0.9
+                    depthLight: 1.25, depthDeep: 0.8
                 )
             ),
             QuizAnswer(
@@ -260,8 +272,7 @@ enum Stage1Questions {
                 detail: "Ash, mousy, or flat brown",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.88, undertoneCool: 1.15,
-                    depthLight: 1.05, depthDeep: 0.95,
-                    chromaVivid: 0.9, chromaMuted: 1.15
+                    depthLight: 1.05, depthDeep: 0.95
                 )
             ),
             QuizAnswer(
@@ -279,8 +290,7 @@ enum Stage1Questions {
                 detail: "Gold or reddish glints visible in sunlight",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.22, undertoneCool: 0.85,
-                    depthLight: 0.78, depthDeep: 1.35,
-                    chromaVivid: 0.9, chromaMuted: 1.1
+                    depthLight: 0.78, depthDeep: 1.35
                 )
             ),
             QuizAnswer(
@@ -289,8 +299,7 @@ enum Stage1Questions {
                 detail: "No warmth; looks almost blue-black",
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 0.82, undertoneCool: 1.22,
-                    depthLight: 0.78, depthDeep: 1.35,
-                    chromaVivid: 1.2, chromaMuted: 0.88
+                    depthLight: 0.78, depthDeep: 1.35
                 )
             ),
             QuizAnswer(
@@ -299,16 +308,13 @@ enum Stage1Questions {
                 detail: nil,
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.5, undertoneCool: 0.65,
-                    depthLight: 0.92, depthDeep: 1.12,
-                    chromaVivid: 1.2, chromaMuted: 0.88
+                    depthLight: 0.92, depthDeep: 1.12
                 )
             )
         ]
     )
 
     // Freckles are almost exclusively a warm-undertone feature (spring/autumn).
-    // Signal is asymmetric: presence is strong warm evidence; absence tells
-    // us little because warm deeper skin types often don't freckle either.
     static let freckles = QuizQuestion(
         id: "freckles",
         prompt: "Do you have natural freckles?",
@@ -341,10 +347,8 @@ enum Stage1Questions {
         ]
     )
 
-    // The color of your natural flush reveals a lot about skin undertone.
-    // Pink = cool (Summer/Winter); peach/coral = warm (Spring); red-orange
-    // = warm (Autumn). Depth options cover darker complexions where flush
-    // is less visible but undertone can still be read from intensity.
+    // Natural flush reveals undertone. Pink → cool (Summer/Winter);
+    // peach/coral → warm (Spring); red-orange → warm (Autumn).
     static let naturalFlush = QuizQuestion(
         id: "natural_flush",
         prompt: "After a workout or hot shower, your face flushes…",
@@ -354,28 +358,19 @@ enum Stage1Questions {
                 id: "pink_rosy",
                 label: "Pink or rosy",
                 detail: "Clean, cool-toned pink",
-                likelihood: AnswerLikelihood(
-                    undertoneWarm: 0.8, undertoneCool: 1.35,
-                    chromaVivid: 1.15, chromaMuted: 0.92
-                )
+                likelihood: AnswerLikelihood(undertoneWarm: 0.8, undertoneCool: 1.35)
             ),
             QuizAnswer(
                 id: "peach_coral",
                 label: "Peachy or coral",
                 detail: "Warm, orange-leaning",
-                likelihood: AnswerLikelihood(
-                    undertoneWarm: 1.35, undertoneCool: 0.8,
-                    chromaVivid: 1.1, chromaMuted: 0.95
-                )
+                likelihood: AnswerLikelihood(undertoneWarm: 1.35, undertoneCool: 0.8)
             ),
             QuizAnswer(
                 id: "red_orange",
                 label: "Red-orange or terracotta",
                 detail: "Distinctly warm and ruddy",
-                likelihood: AnswerLikelihood(
-                    undertoneWarm: 1.2, undertoneCool: 0.85,
-                    chromaVivid: 0.9, chromaMuted: 1.12
-                )
+                likelihood: AnswerLikelihood(undertoneWarm: 1.2, undertoneCool: 0.85)
             ),
             QuizAnswer(
                 id: "deep_red",
@@ -383,18 +378,232 @@ enum Stage1Questions {
                 detail: nil,
                 likelihood: AnswerLikelihood(
                     undertoneWarm: 1.05, undertoneCool: 0.95,
-                    depthLight: 0.82, depthDeep: 1.22,
-                    chromaVivid: 0.88, chromaMuted: 1.15
+                    depthLight: 0.82, depthDeep: 1.22
                 )
             ),
             QuizAnswer(
                 id: "barely_visible",
                 label: "I barely flush at all",
                 detail: nil,
+                likelihood: AnswerLikelihood(depthLight: 0.9, depthDeep: 1.12)
+            )
+        ]
+    )
+
+    // MARK: - Variant Phase Questions (chroma-aware, within-family)
+
+    // Contrast applies to all families — key discriminator for vivid vs muted/light variants.
+    static let contrast = QuizQuestion(
+        id: "contrast",
+        prompt: "How much contrast is there between your hair, skin, and eyes?",
+        helperText: "Imagine a black-and-white photo of yourself — how different are the tones?",
+        options: [
+            QuizAnswer(
+                id: "high_contrast",
+                label: "High contrast",
+                detail: "Very different — e.g. dark hair against fair skin, or vivid eyes",
                 likelihood: AnswerLikelihood(
-                    undertoneWarm: 1.0, undertoneCool: 1.0,
-                    depthLight: 0.9, depthDeep: 1.12
+                    depthLight: 0.85, depthDeep: 1.15,
+                    chromaVivid: 1.4, chromaMuted: 0.75
                 )
+            ),
+            QuizAnswer(
+                id: "medium_contrast",
+                label: "Medium contrast",
+                detail: "Some difference but not striking",
+                likelihood: AnswerLikelihood(chromaVivid: 1.05, chromaMuted: 1.05)
+            ),
+            QuizAnswer(
+                id: "low_contrast",
+                label: "Low contrast",
+                detail: "All similar value — e.g. blonde hair, light skin, light eyes, or all medium-dark",
+                likelihood: AnswerLikelihood(
+                    depthLight: 1.1, depthDeep: 0.9,
+                    chromaVivid: 0.75, chromaMuted: 1.4
+                )
+            ),
+            QuizAnswer(
+                id: "unsure_contrast",
+                label: "Hard to tell",
+                detail: nil,
+                likelihood: AnswerLikelihood()
+            )
+        ]
+    )
+
+    // Neon tolerance: primary Bright Winter vs True Winter discriminator.
+    static let neonTolerance = QuizQuestion(
+        id: "neon_tolerance",
+        prompt: "In a neon or ultra-saturated color — electric blue, hot pink, cobalt — you look:",
+        helperText: "Imagine a top in that color held up to your face.",
+        options: [
+            QuizAnswer(
+                id: "neon_alive",
+                label: "Completely alive — electric and striking",
+                detail: "The intensity looks intentional, not costume-y",
+                likelihood: AnswerLikelihood(
+                    undertoneCool: 1.1,
+                    chromaVivid: 1.5, chromaMuted: 0.72
+                )
+            ),
+            QuizAnswer(
+                id: "neon_intense",
+                label: "Sharp, but icy or pure tones suit me more",
+                detail: "Clean and clear yes — neon specifically feels like too much",
+                likelihood: AnswerLikelihood(
+                    undertoneCool: 1.05,
+                    chromaVivid: 0.85, chromaMuted: 1.05
+                )
+            ),
+            QuizAnswer(
+                id: "neon_washed",
+                label: "Washed out — the color fights my face",
+                detail: nil,
+                likelihood: AnswerLikelihood(chromaVivid: 0.72, chromaMuted: 1.3)
+            ),
+            QuizAnswer(
+                id: "neon_unsure",
+                label: "Honestly not sure — I avoid those colors",
+                detail: nil,
+                likelihood: AnswerLikelihood()
+            )
+        ]
+    )
+
+    // Spring clarity: discriminates Bright / True / Light Spring.
+    // Bright Spring → vivid, electric warm tones.
+    // True Spring → clear and warm, not extreme saturation.
+    // Light Spring → soft, powdery warm pastels.
+    static let springClarity = QuizQuestion(
+        id: "spring_clarity",
+        prompt: "Which spring palette feels most like you?",
+        helperText: "Think about what you're drawn to and what you've been told looks great on you.",
+        options: [
+            QuizAnswer(
+                id: "vivid_spring",
+                label: "Vivid, electric spring — hot coral, fuchsia, vivid peach",
+                detail: "The brighter, the better",
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.1,
+                    chromaVivid: 1.65, chromaMuted: 0.65
+                )
+            ),
+            QuizAnswer(
+                id: "clear_warm_spring",
+                label: "Clear and warm — classic coral, warm red-orange, golden yellow",
+                detail: "Clear colors, not pastel — but not neon either",
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.2,
+                    chromaVivid: 1.2, chromaMuted: 0.88
+                )
+            ),
+            QuizAnswer(
+                id: "soft_pastel_spring",
+                label: "Soft, warm pastels — peach blush, warm ivory, powdery apricot",
+                detail: "Light and delicate — bold colors feel too much",
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.1,
+                    depthLight: 1.35,
+                    chromaVivid: 0.65, chromaMuted: 1.5
+                )
+            ),
+            QuizAnswer(
+                id: "spring_unsure",
+                label: "Not sure — I wear a mix",
+                detail: nil,
+                likelihood: AnswerLikelihood()
+            )
+        ]
+    )
+
+    // Summer softness: discriminates Light / True / Soft Summer.
+    // Soft Summer → dusty, smoky, heavily muted.
+    // True Summer → clean cool, medium muted.
+    // Light Summer → light and airy, slightly more clarity than True.
+    static let summerSoftness = QuizQuestion(
+        id: "summer_softness",
+        prompt: "Which cool-toned palette feels most like you?",
+        helperText: "Think about colors you reach for instinctively.",
+        options: [
+            QuizAnswer(
+                id: "dusty_muted",
+                label: "Dusty, smoky, and grayed — muted mauve, dusty lavender, smoked plum",
+                detail: "The more blended and muted the better — pure colors feel harsh",
+                likelihood: AnswerLikelihood(
+                    undertoneCool: 1.1,
+                    chromaVivid: 0.62, chromaMuted: 1.65
+                )
+            ),
+            QuizAnswer(
+                id: "clean_medium_cool",
+                label: "Clean, medium cool — rose, soft blue, cool berry",
+                detail: "Clear enough to look put-together, not too saturated",
+                likelihood: AnswerLikelihood(
+                    undertoneCool: 1.1,
+                    chromaVivid: 0.88, chromaMuted: 1.18
+                )
+            ),
+            QuizAnswer(
+                id: "light_airy_cool",
+                label: "Light and airy — icy lavender, powder blue, pale rose",
+                detail: "Barely-there cool — bold colors overwhelm me",
+                likelihood: AnswerLikelihood(
+                    undertoneCool: 1.05,
+                    depthLight: 1.4,
+                    chromaVivid: 0.82, chromaMuted: 1.25
+                )
+            ),
+            QuizAnswer(
+                id: "summer_unsure",
+                label: "Not sure — I wear a mix",
+                detail: nil,
+                likelihood: AnswerLikelihood()
+            )
+        ]
+    )
+
+    // Autumn richness: discriminates True / Soft / Dark Autumn.
+    // Dark Autumn → rich, deep jewel tones; high contrast.
+    // Soft Autumn → muted, dusty earthy; low chroma.
+    // True Autumn → balanced warm earthy; neither extreme.
+    static let autumnRichness = QuizQuestion(
+        id: "autumn_richness",
+        prompt: "Which autumn palette feels most like you?",
+        helperText: "Think about the depth and intensity of colors that flatter you most.",
+        options: [
+            QuizAnswer(
+                id: "rich_dark",
+                label: "Rich and deep — burgundy, forest green, deep plum",
+                detail: "Dark, saturated jewel tones — I can handle intensity",
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.05,
+                    depthLight: 0.72, depthDeep: 1.55,
+                    chromaVivid: 1.25, chromaMuted: 0.88
+                )
+            ),
+            QuizAnswer(
+                id: "warm_balanced",
+                label: "Warm and balanced — terracotta, camel, warm olive, spice",
+                detail: "Grounded earthy tones — not too deep, not too muted",
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.2,
+                    chromaVivid: 1.12, chromaMuted: 1.08
+                )
+            ),
+            QuizAnswer(
+                id: "soft_muted",
+                label: "Soft and muted — dusty rose-brown, sage, taupe, warm grey",
+                detail: "Gentle, toned-down earthy — bold colors feel too loud",
+                likelihood: AnswerLikelihood(
+                    undertoneWarm: 1.05,
+                    chromaVivid: 0.65, chromaMuted: 1.6
+                )
+            ),
+            QuizAnswer(
+                id: "autumn_unsure",
+                label: "Not sure — I wear a mix",
+                detail: nil,
+                likelihood: AnswerLikelihood()
             )
         ]
     )

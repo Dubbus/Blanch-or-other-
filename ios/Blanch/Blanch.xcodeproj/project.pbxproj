@@ -32,6 +32,7 @@
 		6869D99587D7BBDFD3A9AD10 /* Stage1Questions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC361EE527016E586DF2BCD0 /* Stage1Questions.swift */; };
 		6ABBF523AD312474D899F438 /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D91CF85C3276554BBA48742 /* AuthRepository.swift */; };
 		6B41D80F30B307E2D2E9FCB0 /* DrapingProcessingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907281A9533A4ED98D7F8B21 /* DrapingProcessingView.swift */; };
+		6F2B08CCA6684FF260A1EA37 /* SeasonFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA831E1EC261C81FA557E55 /* SeasonFamily.swift */; };
 		736FB87DC648C805E70881AD /* DrapingPairView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFF74F0484B78B63078EC /* DrapingPairView.swift */; };
 		74B17BB504CCD56481872977 /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AD5C5AC578E3768C6EA46B /* Endpoints.swift */; };
 		7785BF86E44ADC2BCBC9D700 /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB7FFE4A5CBD3EF2D048076 /* ProductDetailView.swift */; };
@@ -57,6 +58,7 @@
 		BC0751D7992CD095541E0800 /* InfluencerDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1382744A07FD87B5A99605C3 /* InfluencerDTO.swift */; };
 		C0370A703CC3FEF2638AEF24 /* SeasonPaletteProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691EE7225D80BCDD8FD74D1 /* SeasonPaletteProviding.swift */; };
 		D09D041B71EA97599401CB54 /* ResultExplainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D4D4BC23D3573FC1550472 /* ResultExplainer.swift */; };
+		D815CD58952E9A0E6384C4B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A59C6840AAEDE65364330E1 /* Assets.xcassets */; };
 		DD3BC7C839899C1378E5B434 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC951451B739012477D640A /* RequestBuilder.swift */; };
 		DEB92A03A9663CAC580D3F86 /* FaceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6D49B8F2B28BEF50911175 /* FaceDetector.swift */; };
 		E026EBEA9F3FD1E4EF8F881A /* SeasonPalettes.json in Resources */ = {isa = PBXBuildFile; fileRef = C39F706988C70A839646251C /* SeasonPalettes.json */; };
@@ -68,6 +70,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A59C6840AAEDE65364330E1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0B50B03638D6735B1A6F655B /* AuthDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDTO.swift; sourceTree = "<group>"; };
 		0B75902F4935B1C5DC03073E /* AnalysisRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisRepository.swift; sourceTree = "<group>"; };
 		0E1DFF74F0484B78B63078EC /* DrapingPairView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrapingPairView.swift; sourceTree = "<group>"; };
@@ -91,6 +94,7 @@
 		702A2A5EDFF127D7F3BE57A3 /* SeasonDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonDTO.swift; sourceTree = "<group>"; };
 		73C0E48DB97365A9572EAA91 /* LipRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LipRenderer.swift; sourceTree = "<group>"; };
 		7536B4BAD10AFB52BDB00918 /* AnalysisPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisPipeline.swift; sourceTree = "<group>"; };
+		7AA831E1EC261C81FA557E55 /* SeasonFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonFamily.swift; sourceTree = "<group>"; };
 		7DB7FFE4A5CBD3EF2D048076 /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
 		87A8546432D47290BBA9A331 /* ColorSpaceConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSpaceConverter.swift; sourceTree = "<group>"; };
 		8A7E728FFA1AFF671B33FDE4 /* LipRegionDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LipRegionDetector.swift; sourceTree = "<group>"; };
@@ -157,6 +161,7 @@
 			children = (
 				D92455518594F94FE55C45F1 /* DrapingShade.swift */,
 				9B988F35410AA0F8D5C9FE39 /* QuizQuestion.swift */,
+				7AA831E1EC261C81FA557E55 /* SeasonFamily.swift */,
 				9DBA828D490372522E400359 /* SharedPosterior.swift */,
 				EC361EE527016E586DF2BCD0 /* Stage1Questions.swift */,
 			);
@@ -389,6 +394,7 @@
 		D50A8CAA61D3DB3DD40B2ED6 /* Blanch */ = {
 			isa = PBXGroup;
 			children = (
+				0A59C6840AAEDE65364330E1 /* Assets.xcassets */,
 				F0F8AEF063F471DF8394F0D9 /* Info.plist */,
 				F880D6A60B0CB2FBC3F5EFDB /* App */,
 				1111EF630FAF690DB07D9FDD /* Core */,
@@ -437,25 +443,25 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		"TEMP_891522FA-398E-4DBF-9D71-FDC650A84FE7" /* Profile */ = {
+		"TEMP_311468F9-FC68-4C44-87F7-EEC5BE349B7F" /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
+		"TEMP_60CC010D-EB05-43A1-9570-188EABC5B399" /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		"TEMP_9E630AAD-D5EC-4A61-89BD-7FDAF683EDF1" /* Combos */ = {
+		"TEMP_C49DD65D-5A99-433C-A245-5082EB46E5F9" /* Combos */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Combos;
-			sourceTree = "<group>";
-		};
-		"TEMP_BDCEE9A4-4C43-40D7-8D72-3DFA14AE6A11" /* Subscription */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Subscription;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -517,6 +523,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D815CD58952E9A0E6384C4B3 /* Assets.xcassets in Resources */,
 				E026EBEA9F3FD1E4EF8F881A /* SeasonPalettes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -578,6 +585,7 @@
 				39539A8CC1ACE63F771C6A32 /* SeasonBasedStrategy.swift in Sources */,
 				06DFADD3891E7D6400F7AB30 /* SeasonClassificationStrategy.swift in Sources */,
 				03FBCDDC8FA1411DDA4C4704 /* SeasonDTO.swift in Sources */,
+				6F2B08CCA6684FF260A1EA37 /* SeasonFamily.swift in Sources */,
 				C0370A703CC3FEF2638AEF24 /* SeasonPaletteProviding.swift in Sources */,
 				26503D848F9B911F636F1DF8 /* SharedPosterior.swift in Sources */,
 				79AC4E020119EC24055DCFA3 /* SignInView.swift in Sources */,
